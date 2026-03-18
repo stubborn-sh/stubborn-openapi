@@ -39,8 +39,11 @@ jobs:
           fi
           echo "Publishing snapshot: $VERSION"
 
-      - name: Deploy snapshots
-        run: ./mvnw deploy -Ppublish -DskipTests -Dskip.npm -pl !e2e-tests,!ui,!js,!broker-gradle-plugin
+      - name: Build all modules locally
+        run: ./mvnw install -DskipTests -pl !e2e-tests
+
+      - name: Deploy Java modules to Maven Central
+        run: ./mvnw deploy -Ppublish -DskipTests -pl build-parent,broker,broker-api-client,broker-stub-downloader,broker-contract-publisher,broker-maven-plugin,stub-runner
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
