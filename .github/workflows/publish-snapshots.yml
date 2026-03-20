@@ -47,3 +47,13 @@ jobs:
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+
+      - name: Build Docker image
+        run: ./mvnw spring-boot:build-image -pl broker -DskipTests -DskipStubs=true
+
+      - name: Push Docker image
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout -pl build-parent)
+          docker push mgrzejszczak/stubborn:${VERSION}
+

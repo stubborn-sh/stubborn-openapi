@@ -4,6 +4,8 @@ Branch-aware contract governance for Spring Cloud Contract.
 
 **Your contracts should be stubborn — they don't break just because someone pushed on a Friday.**
 
+Heavily inspired by [Pact Broker](https://github.com/pact-foundation/pact_broker) — the gold standard for contract broker tooling. Stubborn brings the same governance model natively to the Spring Cloud Contract ecosystem.
+
 ## License
 
 Apache License 2.0

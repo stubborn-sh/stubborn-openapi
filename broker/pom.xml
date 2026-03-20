@@ -289,7 +289,7 @@
 				</executions>
 				<configuration>
 					<image>
-						<name>spring-cloud-contract-broker:${project.version}</name>
+						<name>mgrzejszczak/stubborn:${project.version}</name>
 					</image>
 				</configuration>
 			</plugin>
