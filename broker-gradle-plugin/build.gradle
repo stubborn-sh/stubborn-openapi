@@ -32,8 +32,8 @@ gradlePlugin {
 	vcsUrl = 'https://github.com/marcingrzejszczak/spring-cloud-contract-broker'
 	plugins {
 		broker {
-			id = 'com.toomuchcoding.broker'
-			implementationClass = 'com.toomuchcoding.broker.gradle.BrokerPlugin'
+			id = 'sh.stubborn.broker'
+			implementationClass = 'sh.stubborn.broker.gradle.BrokerPlugin'
 			displayName = 'Spring Cloud Contract Broker Plugin'
 			description = 'Publishes contracts to Spring Cloud Contract Broker'
 			tags.set(['spring-cloud-contract', 'contract-testing', 'broker'])
