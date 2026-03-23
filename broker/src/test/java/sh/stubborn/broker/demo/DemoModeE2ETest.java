@@ -49,11 +49,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Testcontainers
 @ActiveProfiles("demo")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DemoModeIntegrationTest {
+class DemoModeE2ETest {
 
 	@Container
-	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
-		.withDatabaseName("broker")
+	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine").withDatabaseName("broker")
 		.withUsername("broker")
 		.withPassword("broker");
 
