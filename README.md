@@ -12,7 +12,7 @@ Apache License 2.0
 
 ## Group ID
 
-`com.toomuchcoding`
+`sh.stubborn`
 
 ## Modules
 

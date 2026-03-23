@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * fetch contracts from the running broker instance and configure WireMock stubs.
  */
 @SpringBootTest
-@AutoConfigureStubRunner(ids = "com.toomuchcoding:order-service:1.0.0:stubs",
+@AutoConfigureStubRunner(ids = "sh.stubborn:order-service:1.0.0:stubs",
 		repositoryRoot = "sccbroker://http://localhost:18080", stubsMode = StubRunnerProperties.StubsMode.REMOTE,
 		properties = { "spring.cloud.contract.stubrunner.username=reader",
 				"spring.cloud.contract.stubrunner.password=reader" })

@@ -6,7 +6,7 @@ junit = "6.0.3"
 plugin-publish = "2.1.0"
 
 [libraries]
-broker-contract-publisher = { module = "com.toomuchcoding:broker-contract-publisher", version.ref = "broker-publisher" }
+broker-contract-publisher = { module = "sh.stubborn:broker-contract-publisher", version.ref = "broker-publisher" }
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
 jackson-databind = { module = "tools.jackson.core:jackson-databind", version.ref = "jackson" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }

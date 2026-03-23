@@ -341,7 +341,7 @@ The name has collision risk in the contract management/legal-tech space. However
 | npm scope | **@stubborn-dev** | AVAILABLE |
 | GitHub org | **getstubborn** | AVAILABLE |
 | GitHub org (alt) | stubborn-io | AVAILABLE |
-| Group ID | com.toomuchcoding | Existing |
+| Group ID | sh.stubborn | Existing |
 
 **Known noise (not blockers):**
 - `stubborn-ws` (npm) — HTTP mock server for tests, different product

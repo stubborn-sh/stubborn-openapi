@@ -71,13 +71,13 @@ Goal: `publish` (default phase: `install`)
 
 ### Gradle Plugin
 
-Plugin ID: `com.toomuchcoding.broker`
+Plugin ID: `sh.stubborn.broker`
 
 Task: `publishContracts` (depends on `test`)
 
 ```groovy
 plugins {
-    id 'com.toomuchcoding.broker' version "${brokerVersion}"
+    id 'sh.stubborn.broker' version "${brokerVersion}"
 }
 
 broker {
@@ -143,7 +143,7 @@ broker {
 
 ### Gradle Plugin -- Publish Contracts
 
-**Given** a Gradle project with `com.toomuchcoding.broker` plugin applied
+**Given** a Gradle project with `sh.stubborn.broker` plugin applied
 **And** the contracts directory contains `create-order.yml`
 **And** the broker is running at the configured URL
 **When** I run `gradle publishContracts`

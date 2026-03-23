@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.toomuchcoding</groupId>
+		<groupId>sh.stubborn</groupId>
 		<artifactId>spring-cloud-contract-broker-build-parent</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 		<relativePath>../build-parent</relativePath>
@@ -69,14 +69,14 @@
 
 		<!-- Reactor ordering: broker must build Docker image before e2e-tests run -->
 		<dependency>
-			<groupId>com.toomuchcoding</groupId>
+			<groupId>sh.stubborn</groupId>
 			<artifactId>spring-cloud-contract-broker</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<!-- Reactor ordering: proxy must build Docker image before e2e-tests run -->
 		<dependency>
-			<groupId>com.toomuchcoding</groupId>
+			<groupId>sh.stubborn</groupId>
 			<artifactId>spring-cloud-contract-broker-proxy</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>

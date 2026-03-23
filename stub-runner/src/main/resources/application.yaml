@@ -7,7 +7,7 @@ server:
 
 stubrunner:
   ids:
-    - com.toomuchcoding:spring-cloud-contract-broker:+:stubs:8083
+    - sh.stubborn:spring-cloud-contract-broker:+:stubs:8083
   stubs-mode: LOCAL
 
 management:

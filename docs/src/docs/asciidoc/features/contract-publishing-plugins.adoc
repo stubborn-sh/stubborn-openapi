@@ -81,14 +81,14 @@ mvn install
 
 == Gradle Plugin
 
-Plugin ID: `com.toomuchcoding.broker`
+Plugin ID: `sh.stubborn.broker`
 
 Task: `publishContracts` (depends on `test`)
 
 [source,groovy]
 ----
 plugins {
-    id 'com.toomuchcoding.broker' version "${brokerVersion}"
+    id 'sh.stubborn.broker' version "${brokerVersion}"
 }
 
 broker {
