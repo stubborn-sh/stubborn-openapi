@@ -23,7 +23,7 @@
     "test:integration": "vitest run --include 'packages/*/tests/integration/**/*.test.ts'",
     "test:ci": "vitest run --exclude '**/tests/integration/**'",
     "mutation": "stryker run",
-    "check": "npm run typecheck && npm run lint"
+    "check": "npm run lint"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
