@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { BrokerClient } from "@spring-cloud-contract/broker-client";
+import { BrokerClient } from "@stubborn/broker-client";
 import { resolveCliConfig, type CliConfig } from "./config.js";
 import { formatError } from "./formatter.js";
 import { createAppCommand } from "./commands/app.js";
@@ -16,8 +16,8 @@ import { createSelectorCommand } from "./commands/selector.js";
 import { createCleanupCommand } from "./commands/cleanup.js";
 
 const program = new Command()
-  .name("scc-broker")
-  .description("Spring Cloud Contract Broker CLI")
+  .name("stubborn")
+  .description("Stubborn CLI")
   .version("0.1.0")
   .option("--broker-url <url>", "Broker URL")
   .option("--username <user>", "Username for basic auth")

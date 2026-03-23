@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 
 const mockVerify = vi.fn();
 
-vi.mock("@spring-cloud-contract/verifier", () => ({
+vi.mock("@stubborn/verifier", () => ({
   ContractVerifier: class {
     verify = mockVerify;
   },

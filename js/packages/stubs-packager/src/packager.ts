@@ -1,7 +1,7 @@
 import { createWriteStream } from "node:fs";
 import { extname } from "node:path";
 import archiver from "archiver";
-import { scanContracts } from "@spring-cloud-contract/publisher";
+import { scanContracts } from "@stubborn/publisher";
 import { contractToWireMock } from "./contract-to-wiremock.js";
 
 /** Maven coordinates for the stubs JAR. */

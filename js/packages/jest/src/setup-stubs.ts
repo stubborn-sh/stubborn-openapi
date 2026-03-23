@@ -3,8 +3,8 @@ import {
   parseContract,
   loadFromDirectory,
   type ParsedContract,
-} from "@spring-cloud-contract/stub-server";
-import { BrokerClient, fetchAllPages } from "@spring-cloud-contract/broker-client";
+} from "@stubborn/stub-server";
+import { BrokerClient, fetchAllPages } from "@stubborn/broker-client";
 import { fetchStubsJar, loadLocalJar, type MavenStubsJar } from "./jar-fetcher.js";
 
 /** Configuration for setting up stubs from the broker. */

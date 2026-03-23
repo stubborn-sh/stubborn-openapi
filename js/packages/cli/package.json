@@ -1,9 +1,9 @@
 {
-  "name": "@spring-cloud-contract/cli",
+  "name": "@stubborn/cli",
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "scc-broker": "./dist/index.js"
+    "stubborn": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,9 +12,12 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
-    "@spring-cloud-contract/broker-client": "0.1.0",
-    "@spring-cloud-contract/publisher": "0.1.0",
+    "@stubborn/broker-client": "0.1.0",
+    "@stubborn/publisher": "0.1.0",
     "chalk": "^5.4.1",
     "commander": "^13.1.0"
   },

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { contractToWireMock } from "../../src/contract-to-wiremock.js";
-import type { ScannedContract } from "@spring-cloud-contract/publisher";
+import type { ScannedContract } from "@stubborn/publisher";
 
 function makeContract(name: string, yamlContent: string): ScannedContract {
   return { contractName: name, content: yamlContent, contentType: "application/x-yaml" };

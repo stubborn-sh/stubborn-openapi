@@ -1,5 +1,5 @@
 {
-  "name": "@spring-cloud-contract/stub-server",
+  "name": "@stubborn/stub-server",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -15,6 +15,9 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "js-yaml": "^4.1.0"

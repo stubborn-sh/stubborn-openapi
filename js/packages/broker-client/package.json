@@ -1,5 +1,5 @@
 {
-  "name": "@spring-cloud-contract/broker-client",
+  "name": "@stubborn/broker-client",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -15,6 +15,9 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "tsup": "^8.4.0"

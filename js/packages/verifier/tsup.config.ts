@@ -7,7 +7,7 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   external: [
-    "@spring-cloud-contract/broker-client",
-    "@spring-cloud-contract/stub-server",
+    "@stubborn/broker-client",
+    "@stubborn/stub-server",
   ],
 });

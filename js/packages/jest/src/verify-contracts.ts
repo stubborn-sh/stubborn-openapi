@@ -2,7 +2,7 @@ import {
   ContractVerifier,
   type VerifierConfig,
   type VerificationResult,
-} from "@spring-cloud-contract/verifier";
+} from "@stubborn/verifier";
 
 /**
  * Verify contracts against a provider.

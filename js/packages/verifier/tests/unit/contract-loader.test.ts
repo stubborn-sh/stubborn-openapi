@@ -8,7 +8,7 @@ vi.mock("node:fs/promises", () => ({
   readFile: (...args: unknown[]) => mockReadFile(...args),
 }));
 
-vi.mock("@spring-cloud-contract/stub-server", () => ({
+vi.mock("@stubborn/stub-server", () => ({
   parseContract: vi.fn().mockImplementation((name: string) => ({
     name,
     request: { method: "GET", urlPath: "/api" },
@@ -16,7 +16,7 @@ vi.mock("@spring-cloud-contract/stub-server", () => ({
   })),
 }));
 
-vi.mock("@spring-cloud-contract/broker-client", () => ({
+vi.mock("@stubborn/broker-client", () => ({
   fetchAllPages: vi.fn().mockResolvedValue([
     {
       contractName: "contract1.yaml",
@@ -32,7 +32,7 @@ vi.mock("@spring-cloud-contract/broker-client", () => ({
 }));
 
 import { loadFromDirectory, loadFromBroker } from "../../src/contract-loader.js";
-import type { BrokerClient } from "@spring-cloud-contract/broker-client";
+import type { BrokerClient } from "@stubborn/broker-client";
 
 describe("loadFromDirectory", () => {
   beforeEach(() => {

@@ -6,5 +6,5 @@ export default defineConfig({
   dts: false,
   clean: true,
   sourcemap: true,
-  external: ["@spring-cloud-contract/broker-client"],
+  external: ["@stubborn/broker-client"],
 });

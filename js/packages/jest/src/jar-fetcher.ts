@@ -9,7 +9,7 @@ import {
   parseWireMockMapping,
   parseContract,
   type ParsedContract,
-} from "@spring-cloud-contract/stub-server";
+} from "@stubborn/stub-server";
 
 const execFileAsync = promisify(execFile);
 

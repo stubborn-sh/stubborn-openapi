@@ -1,0 +1,36 @@
+name: Publish NPM Packages
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 0.1.0)'
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Set versions
+        working-directory: js
+        run: |
+          npm version ${{ inputs.version }} --workspaces --no-git-tag-version
+          npm version ${{ inputs.version }} --no-git-tag-version
+      - name: Install dependencies
+        working-directory: js
+        run: npm ci
+      - name: Build
+        working-directory: js
+        run: npm run build
+      - name: Test
+        working-directory: js
+        run: npm run test:ci
+      - name: Publish
+        working-directory: js
+        run: npm publish --workspaces --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,5 +1,5 @@
-import type { BrokerClient } from "@spring-cloud-contract/broker-client";
-import type { ParsedContract } from "@spring-cloud-contract/stub-server";
+import type { BrokerClient } from "@stubborn/broker-client";
+import type { ParsedContract } from "@stubborn/stub-server";
 import { loadFromDirectory, loadFromBroker } from "./contract-loader.js";
 import { executeRequest } from "./request-executor.js";
 import { validateResponse, type ValidationResult } from "./response-validator.js";
