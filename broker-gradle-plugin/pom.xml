@@ -16,6 +16,22 @@
 	<name>Broker Gradle Plugin</name>
 	<description>Gradle plugin for publishing contracts to the SCC Broker (built with Gradle, wrapped for Maven reactor)</description>
 
+	<properties>
+		<gradlew.extension></gradlew.extension>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os><family>windows</family></os>
+			</activation>
+			<properties>
+				<gradlew.extension>.bat</gradlew.extension>
+			</properties>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<!-- Skip Spring Boot repackaging -->
@@ -63,7 +79,7 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>${project.basedir}/gradlew</executable>
+							<executable>${project.basedir}/gradlew${gradlew.extension}</executable>
 							<workingDirectory>${project.basedir}</workingDirectory>
 							<arguments>
 								<argument>clean</argument>
