@@ -5,11 +5,7 @@ import { tmpdir } from "node:os";
 import { pipeline } from "node:stream/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import {
-  parseWireMockMapping,
-  parseContract,
-  type ParsedContract,
-} from "@stubborn-sh/stub-server";
+import { parseWireMockMapping, parseContract, type ParsedContract } from "@stubborn-sh/stub-server";
 
 const execFileAsync = promisify(execFile);
 
