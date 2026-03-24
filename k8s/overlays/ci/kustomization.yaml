@@ -5,24 +5,24 @@ resources:
   - ../../base
 
 images:
-  - name: spring-cloud-contract-broker
+  - name: stubborn-broker
     newTag: 0.1.0-SNAPSHOT
 
 patches:
   - target:
       kind: Deployment
-      name: spring-cloud-contract-broker
+      name: stubborn-broker
     patch: |
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: spring-cloud-contract-broker
+        name: stubborn-broker
       spec:
         replicas: 1
         template:
           spec:
             containers:
-              - name: spring-cloud-contract-broker
+              - name: stubborn-broker
                 imagePullPolicy: Never
                 resources:
                   requests:
@@ -33,12 +33,12 @@ patches:
                     cpu: "1000m"
   - target:
       kind: Secret
-      name: spring-cloud-contract-broker
+      name: stubborn-broker
     patch: |
       apiVersion: v1
       kind: Secret
       metadata:
-        name: spring-cloud-contract-broker
+        name: stubborn-broker
       stringData:
         SPRING_DATASOURCE_URL: "jdbc:postgresql://postgresql:5432/broker"
         SPRING_DATASOURCE_USERNAME: "broker"
@@ -46,28 +46,28 @@ patches:
   # Delete HPA in CI — no metrics-server in KinD, HPA blocks ArgoCD health
   - target:
       kind: HorizontalPodAutoscaler
-      name: spring-cloud-contract-broker
+      name: stubborn-broker
     patch: |
       $patch: delete
       apiVersion: autoscaling/v2
       kind: HorizontalPodAutoscaler
       metadata:
-        name: spring-cloud-contract-broker
+        name: stubborn-broker
   # Delete Ingress in CI — no nginx Ingress controller in KinD, Ingress blocks ArgoCD health
   - target:
       kind: Ingress
-      name: spring-cloud-contract-broker
+      name: stubborn-broker
     patch: |
       $patch: delete
       apiVersion: networking.k8s.io/v1
       kind: Ingress
       metadata:
-        name: spring-cloud-contract-broker
+        name: stubborn-broker
 
 labels:
   - pairs:
-      app.kubernetes.io/name: spring-cloud-contract-broker
-      app.kubernetes.io/part-of: spring-cloud-contract-broker
+      app.kubernetes.io/name: stubborn-broker
+      app.kubernetes.io/part-of: stubborn-broker
       app.kubernetes.io/managed-by: kustomize
       environment: ci
     includeSelectors: true

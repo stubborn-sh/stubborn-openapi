@@ -6,13 +6,13 @@
 
 	<parent>
 		<groupId>sh.stubborn</groupId>
-		<artifactId>spring-cloud-contract-broker-build-parent</artifactId>
+		<artifactId>stubborn-build-parent</artifactId>
 		<relativePath>../build-parent</relativePath>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>broker-stub-downloader</artifactId>
-	<name>Broker Stub Downloader</name>
+	<artifactId>stubborn-stub-downloader</artifactId>
+	<name>Stubborn Stub Downloader</name>
 	<description>StubDownloaderBuilder SPI for fetching contracts from the broker REST API (sccbroker:// protocol)</description>
 
 	<dependencies>

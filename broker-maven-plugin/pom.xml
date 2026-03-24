@@ -6,21 +6,21 @@
 
 	<parent>
 		<groupId>sh.stubborn</groupId>
-		<artifactId>spring-cloud-contract-broker-build-parent</artifactId>
+		<artifactId>stubborn-build-parent</artifactId>
 		<relativePath>../build-parent</relativePath>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>broker-maven-plugin</artifactId>
+	<artifactId>stubborn-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<name>Broker Maven Plugin</name>
+	<name>Stubborn Maven Plugin</name>
 	<description>Maven plugin for publishing contracts to the SCC Broker</description>
 
 	<dependencies>
 		<!-- Core publisher library -->
 		<dependency>
 			<groupId>sh.stubborn</groupId>
-			<artifactId>broker-contract-publisher</artifactId>
+			<artifactId>stubborn-contract-publisher</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

@@ -1,13 +1,13 @@
 spring:
   application:
-    name: spring-cloud-contract-broker-stub-runner
+    name: stubborn-stub-runner
 
 server:
   port: 8083
 
 stubrunner:
   ids:
-    - sh.stubborn:spring-cloud-contract-broker:+:stubs:8083
+    - sh.stubborn:stubborn-broker:+:stubs:8083
   stubs-mode: LOCAL
 
 management:

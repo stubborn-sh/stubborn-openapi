@@ -26,7 +26,7 @@ tests:
     asserts:
       - matchRegex:
           path: spec.template.spec.containers[0].image
-          pattern: "spring-cloud-contract-broker:.*"
+          pattern: "stubborn-broker:.*"
 
   - it: should use custom image tag when specified
     set:
@@ -34,7 +34,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: "spring-cloud-contract-broker:1.2.3"
+          value: "stubborn-broker:1.2.3"
 
   - it: should configure liveness probe on actuator endpoint
     asserts:
@@ -84,7 +84,7 @@ tests:
             name: SPRING_DATASOURCE_USERNAME
             valueFrom:
               secretKeyRef:
-                name: RELEASE-NAME-spring-cloud-contract-broker
+                name: RELEASE-NAME-stubborn-broker
                 key: db-username
 
   - it: should set resource limits

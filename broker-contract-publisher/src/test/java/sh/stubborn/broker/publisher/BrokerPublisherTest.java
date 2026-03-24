@@ -39,7 +39,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * broker's contract tests ({@code @Tag("generate-stubs")}).
  */
 @SpringBootTest(classes = BrokerPublisherTest.TestApp.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@AutoConfigureStubRunner(ids = "sh.stubborn:spring-cloud-contract-broker:+:stubs",
+@AutoConfigureStubRunner(ids = "sh.stubborn:stubborn-broker:+:stubs",
 		stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 class BrokerPublisherTest {
 
@@ -55,7 +55,7 @@ class BrokerPublisherTest {
 	void should_publish_contracts_when_broker_returns_201(@TempDir Path tempDir) throws IOException {
 		// given — contract file matching the publish-contract stub
 		Files.writeString(tempDir.resolve("create-order.yaml"), "request: {}");
-		URL brokerUrl = this.stubFinder.findStubUrl("spring-cloud-contract-broker");
+		URL brokerUrl = this.stubFinder.findStubUrl("stubborn-broker");
 		BrokerPublisher publisher = BrokerPublisher.create(brokerUrl.toString(), "admin", "admin");
 
 		// when
@@ -73,7 +73,7 @@ class BrokerPublisherTest {
 	void should_skip_existing_contracts_when_broker_returns_409(@TempDir Path tempDir) throws IOException {
 		// given — data matching the 409 conflict stubs
 		Files.writeString(tempDir.resolve("existing-contract.yaml"), "request: {}");
-		URL brokerUrl = this.stubFinder.findStubUrl("spring-cloud-contract-broker");
+		URL brokerUrl = this.stubFinder.findStubUrl("stubborn-broker");
 		BrokerPublisher publisher = BrokerPublisher.create(brokerUrl.toString(), "admin", "admin");
 
 		// when
@@ -90,7 +90,7 @@ class BrokerPublisherTest {
 	void should_throw_authentication_exception_when_broker_returns_401(@TempDir Path tempDir) throws IOException {
 		// given — data matching the 401 unauthorized stub
 		Files.writeString(tempDir.resolve("get-order.yaml"), "request: {}");
-		URL brokerUrl = this.stubFinder.findStubUrl("spring-cloud-contract-broker");
+		URL brokerUrl = this.stubFinder.findStubUrl("stubborn-broker");
 		BrokerPublisher publisher = BrokerPublisher.create(brokerUrl.toString(), "bad", "creds");
 
 		// when / then
@@ -102,7 +102,7 @@ class BrokerPublisherTest {
 	@Test
 	void should_return_empty_summary_when_directory_is_empty(@TempDir Path tempDir) {
 		// given — empty directory, registration still happens
-		URL brokerUrl = this.stubFinder.findStubUrl("spring-cloud-contract-broker");
+		URL brokerUrl = this.stubFinder.findStubUrl("stubborn-broker");
 		BrokerPublisher publisher = BrokerPublisher.create(brokerUrl.toString(), "admin", "admin");
 
 		// when
@@ -119,7 +119,7 @@ class BrokerPublisherTest {
 	@Test
 	void should_return_empty_summary_when_directory_does_not_exist() {
 		// given — non-existent directory
-		URL brokerUrl = this.stubFinder.findStubUrl("spring-cloud-contract-broker");
+		URL brokerUrl = this.stubFinder.findStubUrl("stubborn-broker");
 		BrokerPublisher publisher = BrokerPublisher.create(brokerUrl.toString(), "admin", "admin");
 
 		// when

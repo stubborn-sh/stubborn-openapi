@@ -6,14 +6,14 @@
 
 	<parent>
 		<groupId>sh.stubborn</groupId>
-		<artifactId>spring-cloud-contract-broker-build-parent</artifactId>
+		<artifactId>stubborn-build-parent</artifactId>
 		<relativePath>../build-parent</relativePath>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>spring-cloud-contract-broker-js</artifactId>
-	<name>Spring Cloud Contract Broker JS SDK</name>
-	<description>TypeScript/Node.js SDK for the Spring Cloud Contract Broker API</description>
+	<artifactId>stubborn-js</artifactId>
+	<name>Stubborn JS SDK</name>
+	<description>TypeScript/Node.js SDK for the Stubborn Broker API</description>
 
 	<build>
 		<plugins>

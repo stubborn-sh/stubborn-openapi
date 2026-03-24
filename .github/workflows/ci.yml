@@ -124,22 +124,22 @@ jobs:
           version: v3.16.0
 
       - name: Helm lint
-        run: helm lint charts/spring-cloud-contract-broker
+        run: helm lint charts/stubborn-broker
 
       - name: Helm lint with CI values
-        run: helm lint charts/spring-cloud-contract-broker -f charts/spring-cloud-contract-broker/ci/test-values.yaml
+        run: helm lint charts/stubborn-broker -f charts/stubborn-broker/ci/test-values.yaml
 
       - name: Helm template (validate rendered output)
         run: |
-          helm template broker charts/spring-cloud-contract-broker \
-            -f charts/spring-cloud-contract-broker/ci/test-values.yaml \
+          helm template broker charts/stubborn-broker \
+            -f charts/stubborn-broker/ci/test-values.yaml \
             > /dev/null
           echo "Template validation passed"
 
       - name: Helm template — verify key resources present
         run: |
-          OUTPUT=$(helm template broker charts/spring-cloud-contract-broker \
-            -f charts/spring-cloud-contract-broker/ci/test-values.yaml)
+          OUTPUT=$(helm template broker charts/stubborn-broker \
+            -f charts/stubborn-broker/ci/test-values.yaml)
           echo "$OUTPUT" | grep -q "kind: Deployment" || { echo "Missing Deployment"; exit 1; }
           echo "$OUTPUT" | grep -q "kind: Service" || { echo "Missing Service"; exit 1; }
           echo "$OUTPUT" | grep -q "kind: ConfigMap" || { echo "Missing ConfigMap"; exit 1; }
@@ -150,7 +150,7 @@ jobs:
         run: helm plugin install https://github.com/helm-unittest/helm-unittest.git --version v0.7.2
 
       - name: Run Helm unit tests
-        run: helm unittest charts/spring-cloud-contract-broker
+        run: helm unittest charts/stubborn-broker
 
   sbom:
     name: Generate SBOM

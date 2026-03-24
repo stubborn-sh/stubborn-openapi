@@ -6,7 +6,7 @@
 
 	<parent>
 		<groupId>sh.stubborn</groupId>
-		<artifactId>spring-cloud-contract-broker-samples</artifactId>
+		<artifactId>stubborn-samples</artifactId>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
@@ -62,7 +62,7 @@
 			<!-- Broker Maven Plugin — publishes contracts to the broker -->
 			<plugin>
 				<groupId>sh.stubborn</groupId>
-				<artifactId>broker-maven-plugin</artifactId>
+				<artifactId>stubborn-maven-plugin</artifactId>
 				<version>${project.version}</version>
 				<executions>
 					<execution>

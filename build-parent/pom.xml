@@ -12,11 +12,11 @@
 	</parent>
 
 	<groupId>sh.stubborn</groupId>
-	<artifactId>spring-cloud-contract-broker-build-parent</artifactId>
+	<artifactId>stubborn-build-parent</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Spring Cloud Contract Broker Build Parent</name>
-	<description>Shared build configuration for all Spring Cloud Contract Broker modules</description>
+	<name>Stubborn Build Parent</name>
+	<description>Shared build configuration for all Stubborn modules</description>
 	<url>https://stubborn.sh</url>
 
 	<licenses>

@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "spring-cloud-contract-broker.name" -}}
+{{- define "stubborn-broker.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "spring-cloud-contract-broker.fullname" -}}
+{{- define "stubborn-broker.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "spring-cloud-contract-broker.chart" -}}
+{{- define "stubborn-broker.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels.
 */}}
-{{- define "spring-cloud-contract-broker.labels" -}}
-helm.sh/chart: {{ include "spring-cloud-contract-broker.chart" . }}
-{{ include "spring-cloud-contract-broker.selectorLabels" . }}
+{{- define "stubborn-broker.labels" -}}
+helm.sh/chart: {{ include "stubborn-broker.chart" . }}
+{{ include "stubborn-broker.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,17 +45,17 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels.
 */}}
-{{- define "spring-cloud-contract-broker.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "spring-cloud-contract-broker.name" . }}
+{{- define "stubborn-broker.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "stubborn-broker.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use.
 */}}
-{{- define "spring-cloud-contract-broker.serviceAccountName" -}}
+{{- define "stubborn-broker.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "spring-cloud-contract-broker.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "stubborn-broker.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
@@ -64,10 +64,10 @@ Create the name of the service account to use.
 {{/*
 Create the name of the secret containing database credentials.
 */}}
-{{- define "spring-cloud-contract-broker.secretName" -}}
+{{- define "stubborn-broker.secretName" -}}
 {{- if .Values.postgresql.existingSecret }}
 {{- .Values.postgresql.existingSecret }}
 {{- else }}
-{{- include "spring-cloud-contract-broker.fullname" . }}
+{{- include "stubborn-broker.fullname" . }}
 {{- end }}
 {{- end }}

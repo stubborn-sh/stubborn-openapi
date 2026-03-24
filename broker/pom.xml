@@ -6,20 +6,20 @@
 
 	<parent>
 		<groupId>sh.stubborn</groupId>
-		<artifactId>spring-cloud-contract-broker-build-parent</artifactId>
+		<artifactId>stubborn-build-parent</artifactId>
 		<relativePath>../build-parent</relativePath>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>spring-cloud-contract-broker</artifactId>
-	<name>Spring Cloud Contract Broker</name>
+	<artifactId>stubborn-broker</artifactId>
+	<name>Stubborn Broker</name>
 	<description>Core broker application for contract governance</description>
 
 	<dependencies>
 		<!-- UI module — ensures ui is built before broker in parallel builds (-T 1C) -->
 		<dependency>
 			<groupId>sh.stubborn</groupId>
-			<artifactId>spring-cloud-contract-broker-ui</artifactId>
+			<artifactId>stubborn-ui</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>

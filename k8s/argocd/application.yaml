@@ -1,11 +1,11 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: spring-cloud-contract-broker
+  name: stubborn-broker
   namespace: argocd
   labels:
-    app.kubernetes.io/name: spring-cloud-contract-broker
-    app.kubernetes.io/part-of: spring-cloud-contract-broker
+    app.kubernetes.io/name: stubborn-broker
+    app.kubernetes.io/part-of: stubborn-broker
     app.kubernetes.io/managed-by: argocd
     app.kubernetes.io/component: application
   finalizers:
@@ -13,7 +13,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:marcingrzejszczak/spring-cloud-contract-broker.git
+    repoURL: git@github.com:marcingrzejszczak/stubborn-broker.git
     targetRevision: HEAD
     path: k8s/overlays/prod
   destination:

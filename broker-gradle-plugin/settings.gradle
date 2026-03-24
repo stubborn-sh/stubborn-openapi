@@ -6,4 +6,4 @@ pluginManagement {
 	}
 }
 
-rootProject.name = 'broker-gradle-plugin'
+rootProject.name = 'stubborn-gradle-plugin'

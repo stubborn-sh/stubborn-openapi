@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: spring-cloud-contract-broker
+  name: stubborn-broker
   labels:
-    app.kubernetes.io/name: spring-cloud-contract-broker
-    app.kubernetes.io/part-of: spring-cloud-contract-broker
+    app.kubernetes.io/name: stubborn-broker
+    app.kubernetes.io/part-of: stubborn-broker
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -16,6 +16,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: spring-cloud-contract-broker
+                name: stubborn-broker
                 port:
                   number: 80

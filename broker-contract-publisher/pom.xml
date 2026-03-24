@@ -6,13 +6,13 @@
 
 	<parent>
 		<groupId>sh.stubborn</groupId>
-		<artifactId>spring-cloud-contract-broker-build-parent</artifactId>
+		<artifactId>stubborn-build-parent</artifactId>
 		<relativePath>../build-parent</relativePath>
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>broker-contract-publisher</artifactId>
-	<name>Broker Contract Publisher</name>
+	<artifactId>stubborn-contract-publisher</artifactId>
+	<name>Stubborn Contract Publisher</name>
 	<description>Core library for publishing contracts to the SCC Broker REST API</description>
 
 	<dependencies>

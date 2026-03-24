@@ -28,14 +28,14 @@ dependencies {
 }
 
 gradlePlugin {
-	website = 'https://github.com/marcingrzejszczak/spring-cloud-contract-broker'
-	vcsUrl = 'https://github.com/marcingrzejszczak/spring-cloud-contract-broker'
+	website = 'https://github.com/stubborn-sh/stubborn'
+	vcsUrl = 'https://github.com/stubborn-sh/stubborn'
 	plugins {
 		broker {
 			id = 'sh.stubborn.broker'
 			implementationClass = 'sh.stubborn.broker.gradle.BrokerPlugin'
-			displayName = 'Spring Cloud Contract Broker Plugin'
-			description = 'Publishes contracts to Spring Cloud Contract Broker'
+			displayName = 'Stubborn Broker Plugin'
+			description = 'Publishes contracts to Stubborn Broker'
 			tags.set(['spring-cloud-contract', 'contract-testing', 'broker'])
 		}
 	}

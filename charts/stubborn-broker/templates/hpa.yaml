@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "spring-cloud-contract-broker.fullname" . }}
+  name: {{ include "stubborn-broker.fullname" . }}
   labels:
-    {{- include "spring-cloud-contract-broker.labels" . | nindent 4 }}
+    {{- include "stubborn-broker.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "spring-cloud-contract-broker.fullname" . }}
+    name: {{ include "stubborn-broker.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

@@ -63,7 +63,7 @@ final class SharedContainers {
 			.waitingFor(Wait.forHttp("/__admin/mappings").forPort(8080).forStatusCode(200));
 		WIREMOCK.start();
 
-		BROKER = new GenericContainer<>("spring-cloud-contract-broker:0.1.0-SNAPSHOT").withNetwork(NETWORK)
+		BROKER = new GenericContainer<>("stubborn-broker:0.1.0-SNAPSHOT").withNetwork(NETWORK)
 			.withExposedPorts(8642)
 			.withEnv("DATABASE_URL", "jdbc:postgresql://postgres:5432/broker")
 			.withEnv("DATABASE_USERNAME", "broker")
@@ -75,7 +75,7 @@ final class SharedContainers {
 				.withStartupTimeout(java.time.Duration.ofSeconds(120)));
 		BROKER.start();
 
-		PROXY = new GenericContainer<>("spring-cloud-contract-broker-proxy:0.1.0-SNAPSHOT").withNetwork(NETWORK)
+		PROXY = new GenericContainer<>("stubborn-proxy:0.1.0-SNAPSHOT").withNetwork(NETWORK)
 			.withNetworkAliases("proxy")
 			.withExposedPorts(8080)
 			.withEnv("SPRING_AI_OPENAI_BASE_URL", "http://wiremock:8080")

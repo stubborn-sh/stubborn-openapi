@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "spring-cloud-contract-broker.fullname" . }}
+  name: {{ include "stubborn-broker.fullname" . }}
   labels:
-    {{- include "spring-cloud-contract-broker.labels" . | nindent 4 }}
+    {{- include "stubborn-broker.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "spring-cloud-contract-broker.selectorLabels" . | nindent 6 }}
+      {{- include "stubborn-broker.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "spring-cloud-contract-broker.labels" . | nindent 8 }}
+        {{- include "stubborn-broker.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "spring-cloud-contract-broker.serviceAccountName" . }}
+      serviceAccountName: {{ include "stubborn-broker.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -33,12 +33,12 @@ spec:
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "spring-cloud-contract-broker.secretName" . }}
+                  name: {{ include "stubborn-broker.secretName" . }}
                   key: db-username
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "spring-cloud-contract-broker.secretName" . }}
+                  name: {{ include "stubborn-broker.secretName" . }}
                   key: db-password
             - name: JAVA_TOOL_OPTIONS
               value: "-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"

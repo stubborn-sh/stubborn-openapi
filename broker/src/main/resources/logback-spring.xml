@@ -2,7 +2,7 @@
 <configuration>
 	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
-	<property name="APP_NAME" value="spring-cloud-contract-broker"/>
+	<property name="APP_NAME" value="stubborn-broker"/>
 
 	<!-- Console appender -->
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

@@ -2,7 +2,7 @@
 replicaCount: 1
 
 image:
-  repository: spring-cloud-contract-broker
+  repository: stubborn-broker
   tag: "0.1.0-SNAPSHOT"
   pullPolicy: Never
 
