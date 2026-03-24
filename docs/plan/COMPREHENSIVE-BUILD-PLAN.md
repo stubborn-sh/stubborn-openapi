@@ -1,4 +1,4 @@
-# Spring Cloud Contract Broker — Comprehensive Build Plan
+# Stubborn — Comprehensive Build Plan
 
 > Merged from: project-specific build prompt + all local Claude rules
 > (`core.md`, `java-spring.md`, `testing.md`, `api-design.md`, `error-handling.md`,
@@ -40,7 +40,7 @@
 
 ## 1. Project Overview
 
-**Spring Cloud Contract Broker** is a governance server for the Spring Cloud Contract
+**Stubborn** is a governance server for the Spring Cloud Contract
 ecosystem — think Pact Broker but native to Spring Cloud Contract.
 
 **Core capabilities:**
@@ -54,7 +54,7 @@ ecosystem — think Pact Broker but native to Spring Cloud Contract.
 
 **Self-documenting:** The broker's own REST API is tested with MockMvc + Spring RestDocs,
 which produces Spring Cloud Contract WireMock stubs. Anyone can use
-`@AutoConfigureStubRunner(ids = "org.springframework.cloud:spring-cloud-contract-broker")`
+`@AutoConfigureStubRunner(ids = "sh.stubborn:stubborn")`
 to get a fake broker.
 
 ---
@@ -1470,5 +1470,5 @@ Is user explicitly overriding?
 
 ---
 
-*This plan is the single source of truth for building Spring Cloud Contract Broker.
+*This plan is the single source of truth for building Stubborn.
 Every rule from both the build prompt and local Claude rules has been incorporated.*

@@ -1,6 +1,6 @@
 openapi: "3.0.3"
 info:
-  title: Spring Cloud Contract Broker API
+  title: Stubborn API
   description: Governance server for the Spring Cloud Contract ecosystem
   version: 0.1.0
   license:

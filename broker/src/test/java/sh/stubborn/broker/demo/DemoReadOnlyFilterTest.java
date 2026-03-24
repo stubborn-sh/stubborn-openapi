@@ -127,4 +127,14 @@ class DemoReadOnlyFilterTest {
 		verifyNoInteractions(this.filterChain);
 	}
 
+	@Test
+	void post_to_selectors_passes_through() throws Exception {
+		MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/v1/selectors");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+
+		this.filter.doFilter(request, response, this.filterChain);
+
+		verify(this.filterChain).doFilter(request, response);
+	}
+
 }

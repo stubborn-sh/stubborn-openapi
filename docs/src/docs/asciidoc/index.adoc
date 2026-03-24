@@ -1,4 +1,4 @@
-= Spring Cloud Contract Broker
+= Stubborn
 :toc: left
 :toclevels: 3
 :source-highlighter: highlight.js
@@ -7,7 +7,7 @@
 
 == Introduction
 
-Spring Cloud Contract Broker is a governance server for the Spring Cloud Contract ecosystem.
+Stubborn is a governance server for the Spring Cloud Contract ecosystem.
 It provides centralized management of contracts, stubs, verification results, environment
 tracking, and deployment safety checks.
 

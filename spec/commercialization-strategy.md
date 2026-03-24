@@ -139,7 +139,7 @@ Spring IO attendees
 
 ### Target Structure
 
-**OSS Repository** (`spring-cloud-contract-broker`, public):
+**OSS Repository** (`stubborn`, public):
 - build-tools/bom, build-tools/build-parent
 - openapi-validator, broker, ui, broker-api-client
 - broker-stub-downloader, broker-contract-publisher
@@ -147,7 +147,7 @@ Spring IO attendees
 - stub-runner, js (broker-client + publisher only)
 - samples, e2e-tests, docs, spec, charts, k8s
 
-**Enterprise Repository** (`spring-cloud-contract-broker-enterprise`, private):
+**Enterprise Repository** (`stubborn-enterprise`, private):
 - proxy (AI traffic-to-contract)
 - broker-mcp-server (MCP server)
 - broker-cli (full CLI)
@@ -387,7 +387,7 @@ Implementation:
 ### Target Folder Structure
 
 ```
-spring-cloud-contract-broker/
+stubborn/
 ├── pom.xml                          (thin reactor: lists build-tools, broker-oss, broker-enterprise, e2e-tests)
 ├── build-tools/
 │   └── build-parent/pom.xml         (inherits spring-boot-starter-parent, all shared plugins/deps)

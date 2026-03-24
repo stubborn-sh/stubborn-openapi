@@ -89,7 +89,7 @@ management:
         enabled: true  # K8s liveness/readiness probes
   observations:
     key-values:
-      application: spring-cloud-contract-broker  # common tag for all metrics
+      application: stubborn  # common tag for all metrics
 ```
 
 **Security:** Only expose `health` and `prometheus` actuator endpoints. Never expose `env`, `configprops`, or `beans`.

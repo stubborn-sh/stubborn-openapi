@@ -49,7 +49,7 @@ spring:
   ai:
     mcp:
       server:
-        name: spring-cloud-contract-broker
+        name: stubborn
         version: 0.1.0
         type: SYNC
         protocol: STATELESS

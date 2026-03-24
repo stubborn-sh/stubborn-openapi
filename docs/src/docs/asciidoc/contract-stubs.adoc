@@ -1,11 +1,11 @@
 [[contract-stubs]]
 == Contract Stubs
 
-The Spring Cloud Contract Broker publishes a stubs JAR that consumers can use via Spring Cloud Contract Stub Runner to test against the broker's API without running the actual server.
+Stubborn publishes a stubs JAR that consumers can use via Spring Cloud Contract Stub Runner to test against the broker's API without running the actual server.
 
 === Stubs JAR Contents
 
-The stubs JAR (`spring-cloud-contract-broker-{version}-stubs.jar`) contains:
+The stubs JAR (`stubborn-{version}-stubs.jar`) contains:
 
 * **WireMock JSON mappings** (`META-INF/.../mappings/*.json`) -- for request/response stub matching
 * **Groovy Contract DSL** (`META-INF/.../contracts/*.groovy`) -- for contract verification
@@ -42,7 +42,7 @@ These are generated automatically from contract tests using Spring REST Docs + `
 ----
 <dependency>
     <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-contract-broker</artifactId>
+    <artifactId>stubborn</artifactId>
     <version>${broker.version}</version>
     <classifier>stubs</classifier>
     <scope>test</scope>
@@ -55,7 +55,7 @@ These are generated automatically from contract tests using Spring REST Docs + `
 ----
 @SpringBootTest
 @AutoConfigureStubRunner(
-    ids = "org.springframework.cloud:spring-cloud-contract-broker:+:stubs:8090",
+    ids = "sh.stubborn:stubborn:+:stubs:8090",
     stubsMode = StubRunnerProperties.StubsMode.LOCAL
 )
 class BrokerClientTest {
@@ -86,7 +86,7 @@ class BrokerClientTest {
 ----
 StubRunner stubRunner = new StubRunner(
     StubRunnerOptionsBuilder.builder()
-        .withStubsFromClasspath("org.springframework.cloud:spring-cloud-contract-broker")
+        .withStubsFromClasspath("sh.stubborn:stubborn")
         .withPort(8090)
         .build()
 );
@@ -101,7 +101,7 @@ The stubs JAR is built automatically during `./mvnw verify`:
 ----
 ./mvnw clean verify -pl broker
 ls broker/target/*-stubs.jar
-# broker/target/spring-cloud-contract-broker-0.1.0-SNAPSHOT-stubs.jar
+# broker/target/stubborn-0.1.0-SNAPSHOT-stubs.jar
 ----
 
 The contract tests in `broker/src/test/java/.../broker/*ContractTest.java` classes generate both WireMock JSON and Groovy DSL via `SpringCloudContractRestDocs.dslContract()`, then `maven-assembly-plugin` in the broker module packages them.

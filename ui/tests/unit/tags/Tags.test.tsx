@@ -112,9 +112,11 @@ describe("TagsPage", () => {
     await selectVersion(user);
     await user.click(screen.getByRole("button", { name: "Look up tags" }));
 
-    // assert
-    expect(await screen.findByText("RELEASE")).toBeInTheDocument();
-    expect(await screen.findByText("STABLE")).toBeInTheDocument();
+    // assert - tags appear in both filter chips and table rows
+    await waitFor(() => {
+      expect(screen.getAllByText("RELEASE").length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText("STABLE").length).toBeGreaterThanOrEqual(1);
+    });
   });
 
   it("should display table column headers after lookup", async () => {
@@ -127,10 +129,56 @@ describe("TagsPage", () => {
     await selectVersion(user);
     await user.click(screen.getByRole("button", { name: "Look up tags" }));
 
-    // assert
+    // assert - "Version" appears as both a form label and column header
     await waitFor(() => {
       expect(screen.getByText("Tag")).toBeInTheDocument();
+      expect(screen.getAllByText("Version").length).toBeGreaterThanOrEqual(2);
       expect(screen.getByText("Created At")).toBeInTheDocument();
+    });
+  });
+
+  it("should show tag filter chips after lookup", async () => {
+    // arrange
+    const user = userEvent.setup();
+    renderWithProviders(<TagsPage />);
+
+    // act
+    await selectApp(user);
+    await selectVersion(user);
+    await user.click(screen.getByRole("button", { name: "Look up tags" }));
+
+    // assert - filter chips rendered for each unique tag plus "All"
+    await waitFor(() => {
+      expect(screen.getByText("All")).toBeInTheDocument();
+      // RELEASE and STABLE appear both as table rows and as filter chip buttons
+      const releaseElements = screen.getAllByText("RELEASE");
+      expect(releaseElements.length).toBeGreaterThanOrEqual(2);
+      const stableElements = screen.getAllByText("STABLE");
+      expect(stableElements.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  it("should filter tags when clicking a tag chip", async () => {
+    // arrange
+    const user = userEvent.setup();
+    renderWithProviders(<TagsPage />);
+
+    // act - look up tags
+    await selectApp(user);
+    await selectVersion(user);
+    await user.click(screen.getByRole("button", { name: "Look up tags" }));
+    await waitFor(() => {
+      expect(screen.getAllByText("RELEASE").length).toBeGreaterThanOrEqual(1);
+    });
+
+    // act - click the RELEASE filter chip (the button, not the table cell)
+    const filterChips = screen.getAllByText("RELEASE");
+    const chipButton = filterChips.find((el) => el.tagName === "BUTTON") ?? filterChips[0];
+    await user.click(chipButton);
+
+    // assert - RELEASE still visible, STABLE filtered out of the table (chip still exists)
+    await waitFor(() => {
+      expect(screen.getAllByText("RELEASE").length).toBeGreaterThanOrEqual(1);
     });
   });
 

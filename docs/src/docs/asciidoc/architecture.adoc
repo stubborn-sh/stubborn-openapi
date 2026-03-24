@@ -6,7 +6,7 @@ The project is organized as a multi-module Maven reactor:
 
 [source]
 ----
-spring-cloud-contract-broker/
+stubborn/
 ├── pom.xml                    (parent POM, packaging=pom)
 ├── proxy/                     (AI traffic-to-contract proxy — independent Spring Boot app)
 ├── ui/                        (React frontend — Vite + TailwindCSS + React Query)
