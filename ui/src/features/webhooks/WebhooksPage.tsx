@@ -6,7 +6,7 @@ import {
   useWebhookExecutions,
 } from "./useWebhooks";
 import { useSearchApplications } from "@/features/applications";
-import { DataTable, SearchInput, AsyncComboBox } from "@/shared/components";
+import { DataTable, SearchInput, AsyncComboBox, AppLink } from "@/shared/components";
 import {
   Badge,
   Button,
@@ -50,9 +50,12 @@ export default function WebhooksPage() {
     {
       key: "applicationName",
       header: "Application",
-      render: (w: WebhookResponse) => (
-        <span className="font-medium text-foreground">{w.applicationName ?? "Global"}</span>
-      ),
+      render: (w: WebhookResponse) =>
+        w.applicationName ? (
+          <AppLink name={w.applicationName} />
+        ) : (
+          <span className="font-medium text-muted-foreground">Global</span>
+        ),
     },
     {
       key: "eventType",
