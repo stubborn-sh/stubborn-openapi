@@ -22,11 +22,11 @@ primary_region = 'arn'
     soft_limit = 80
 
 [[http_service.checks]]
-  grace_period = "30s"
+  grace_period = "120s"
   interval = "15s"
   method = "GET"
   path = "/actuator/health"
-  timeout = "5s"
+  timeout = "10s"
 
 [[vm]]
   memory = '512mb'
