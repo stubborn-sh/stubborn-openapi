@@ -279,7 +279,7 @@ VALUES
 INSERT INTO webhooks (application_id, event_type, url, headers, enabled)
 VALUES
     ((SELECT id FROM applications WHERE name = 'notification-service'),
-     'contract_published',
+     'CONTRACT_PUBLISHED',
      'https://hooks.example.com/stubborn/notifications',
      '{"X-Webhook-Secret": "demo-secret-token"}',
      TRUE);

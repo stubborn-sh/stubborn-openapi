@@ -43,12 +43,19 @@ class DemoReadOnlyFilter extends OncePerRequestFilter {
 
 	private static final Set<String> ALLOWED_METHODS = Set.of("GET", "HEAD", "OPTIONS");
 
+	/** POST endpoints that are read-only queries (not mutations). */
+	private static final Set<String> ALLOWED_POST_PATHS = Set.of("/api/v1/selectors");
+
 	private static final String ERROR_BODY = "{\"code\":\"DEMO_READ_ONLY\",\"message\":\"Write operations are disabled in demo mode\"}";
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		if (ALLOWED_METHODS.contains(request.getMethod())) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+		if ("POST".equals(request.getMethod()) && ALLOWED_POST_PATHS.contains(request.getRequestURI())) {
 			filterChain.doFilter(request, response);
 			return;
 		}

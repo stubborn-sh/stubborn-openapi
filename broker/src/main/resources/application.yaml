@@ -1,6 +1,6 @@
 spring:
   application:
-    name: spring-cloud-contract-broker
+    name: stubborn
   threads:
     virtual:
       enabled: true

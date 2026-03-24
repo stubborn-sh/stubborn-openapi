@@ -99,7 +99,7 @@ export default function SettingsPage() {
           <CardContent className="space-y-3 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Application</span>
-              <span className="text-foreground">Spring Cloud Contract Broker</span>
+              <span className="text-foreground">Stubborn</span>
             </div>
             <Separator />
             <div className="flex justify-between">
