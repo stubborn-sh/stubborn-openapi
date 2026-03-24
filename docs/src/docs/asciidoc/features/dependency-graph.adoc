@@ -35,3 +35,5 @@ Returns provider and consumer dependencies for a specific application.
 == UI
 
 The dashboard includes a dependency graph visualization page showing all application relationships.
+
+image::demo-graph.png[Dependency Graph,width=100%]

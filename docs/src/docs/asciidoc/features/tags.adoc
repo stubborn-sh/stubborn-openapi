@@ -21,3 +21,5 @@ Get the latest version with a specific tag.
 Tags allow teams to mark releases and query for the latest stable version without tracking
 exact version numbers. Consumer version selectors can reference tags to determine which
 contracts to verify against.
+
+image::demo-tags.png[Tags,width=100%]

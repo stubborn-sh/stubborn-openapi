@@ -38,3 +38,5 @@ Each execution is recorded with the HTTP response status and any error message.
 
 Creating, updating, and deleting webhooks requires the ADMIN role.
 Listing and viewing webhooks requires the READER role.
+
+image::demo-webhooks.png[Webhooks,width=100%]

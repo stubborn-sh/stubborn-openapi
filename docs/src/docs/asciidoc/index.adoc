@@ -13,6 +13,8 @@ tracking, and deployment safety checks.
 
 include::getting-started.adoc[leveloffset=+1]
 
+include::ui-tour.adoc[leveloffset=+1]
+
 include::architecture.adoc[leveloffset=+1]
 
 include::features/application-registration.adoc[leveloffset=+1]
