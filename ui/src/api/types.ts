@@ -50,13 +50,14 @@ export interface CanIDeployResponse {
   application: string;
   version: string;
   environment: string;
-  consumers: ConsumerResult[];
+  summary: string;
+  consumerResults: ConsumerResult[];
 }
 
 export interface ConsumerResult {
-  consumerName: string;
+  consumer: string;
+  consumerVersion: string;
   verified: boolean;
-  version: string | null;
 }
 
 export interface DependencyNode {

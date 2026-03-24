@@ -153,7 +153,7 @@ describe("CanIDeployPage", () => {
     expect(await screen.findByText("Consumer Results:")).toBeInTheDocument();
     const paymentElements = await screen.findAllByText("payment-service");
     expect(paymentElements.length).toBeGreaterThanOrEqual(1);
-    expect(await screen.findByText("SUCCESS")).toBeInTheDocument();
+    expect(await screen.findByText("VERIFIED")).toBeInTheDocument();
   });
 
   it("should show UNSAFE result with failed consumers", async () => {
@@ -181,9 +181,9 @@ describe("CanIDeployPage", () => {
     await fillForm(user, { version: "2.0.0", env: "production" });
     await user.click(screen.getByRole("button", { name: "Check" }));
 
-    // assert - should have both SUCCESS and FAILED badges in consumer results
+    // assert - should have NOT VERIFIED badge for unverified consumers
     await waitFor(() => {
-      const badges = screen.getAllByText("FAILED");
+      const badges = screen.getAllByText("NOT VERIFIED");
       expect(badges.length).toBeGreaterThanOrEqual(1);
     });
   });

@@ -135,16 +135,17 @@ export default function CanIDeployPage() {
             <p className="text-sm text-muted-foreground mb-4">
               {result.application} v{result.version} to {result.environment}
             </p>
-            {result.consumers.length > 0 && (
+            <p className="text-sm text-muted-foreground mb-4">{result.summary}</p>
+            {result.consumerResults && result.consumerResults.length > 0 && (
               <div className="space-y-2">
                 <p className="text-sm font-medium text-foreground">Consumer Results:</p>
-                {result.consumers.map((c) => (
-                  <div key={c.consumerName} className="flex items-center gap-3 text-sm">
+                {result.consumerResults.map((c) => (
+                  <div key={c.consumer} className="flex items-center gap-3 text-sm">
                     <Badge variant={c.verified ? "success" : "failed"}>
-                      {c.verified ? "SUCCESS" : "FAILED"}
+                      {c.verified ? "VERIFIED" : "NOT VERIFIED"}
                     </Badge>
-                    <span className="text-foreground">{c.consumerName}</span>
-                    {c.version && <span className="text-muted-foreground">v{c.version}</span>}
+                    <span className="text-foreground">{c.consumer}</span>
+                    <span className="text-muted-foreground">v{c.consumerVersion}</span>
                   </div>
                 ))}
               </div>
