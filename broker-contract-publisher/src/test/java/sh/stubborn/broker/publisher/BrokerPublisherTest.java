@@ -39,8 +39,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * broker's contract tests ({@code @Tag("generate-stubs")}).
  */
 @SpringBootTest(classes = BrokerPublisherTest.TestApp.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
-@AutoConfigureStubRunner(ids = "sh.stubborn:stubborn-broker:+:stubs",
-		stubsMode = StubRunnerProperties.StubsMode.LOCAL)
+@AutoConfigureStubRunner(ids = "sh.stubborn:stubborn-broker:+:stubs", stubsMode = StubRunnerProperties.StubsMode.LOCAL)
 class BrokerPublisherTest {
 
 	@SpringBootApplication
