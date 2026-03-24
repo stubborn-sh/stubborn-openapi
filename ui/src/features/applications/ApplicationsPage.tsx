@@ -138,6 +138,23 @@ function ApplicationDetail({ name }: { name: string }) {
             <p className="text-foreground">{app.mainBranch ?? "main"}</p>
           </div>
           <div>
+            <span className="text-muted-foreground">Repository</span>
+            {app.repositoryUrl ? (
+              <p>
+                <a
+                  href={app.repositoryUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-700 hover:underline dark:text-emerald-400"
+                >
+                  {app.repositoryUrl}
+                </a>
+              </p>
+            ) : (
+              <p className="text-muted-foreground">Not configured</p>
+            )}
+          </div>
+          <div>
             <span className="text-muted-foreground">Created</span>
             <p className="text-foreground">{new Date(app.createdAt).toLocaleString()}</p>
           </div>

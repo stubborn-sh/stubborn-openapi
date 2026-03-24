@@ -41,16 +41,33 @@ public class ApplicationService {
 	@Observed(name = "broker.application.register")
 	@Transactional
 	@CacheEvict(cacheNames = "applications", allEntries = true)
-	public Application register(String name, @Nullable String description, String owner, @Nullable String mainBranch) {
+	public Application register(String name, @Nullable String description, String owner, @Nullable String mainBranch,
+			@Nullable String repositoryUrl) {
 		if (this.repository.existsByName(name)) {
 			throw new ApplicationAlreadyExistsException(name);
 		}
-		Application application = Application.create(name, description, owner, mainBranch);
+		Application application = Application.create(name, description, owner, mainBranch, repositoryUrl);
 		return this.repository.save(application);
 	}
 
+	@Observed(name = "broker.application.register")
+	@Transactional
+	@CacheEvict(cacheNames = "applications", allEntries = true)
+	public Application register(String name, @Nullable String description, String owner, @Nullable String mainBranch) {
+		return register(name, description, owner, mainBranch, null);
+	}
+
 	public Application register(String name, @Nullable String description, String owner) {
-		return register(name, description, owner, null);
+		return register(name, description, owner, null, null);
+	}
+
+	@Transactional
+	@CacheEvict(cacheNames = "applications", allEntries = true)
+	public Application update(String name, String mainBranch, @Nullable String repositoryUrl) {
+		Application application = findByName(name);
+		application.updateMainBranch(mainBranch);
+		application.updateRepositoryUrl(repositoryUrl);
+		return this.repository.save(application);
 	}
 
 	@Transactional

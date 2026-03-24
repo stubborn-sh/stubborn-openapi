@@ -66,7 +66,9 @@ describe("EnvironmentsPage", () => {
     renderWithProviders(<EnvironmentsPage />);
 
     // assert - dev deployments should load (first env)
-    expect(await screen.findByText("1.1.0-SNAPSHOT")).toBeInTheDocument();
+    // Version may appear in both the overview matrix and the deployment table
+    const elements = await screen.findAllByText("1.1.0-SNAPSHOT");
+    expect(elements.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should show table column headers", async () => {
@@ -93,9 +95,11 @@ describe("EnvironmentsPage", () => {
     // act - click on staging button
     await user.click(screen.getByRole("button", { name: "staging" }));
 
-    // assert - staging deployments should appear
-    expect(await screen.findByText("order-service")).toBeInTheDocument();
-    expect(await screen.findByText("payment-service")).toBeInTheDocument();
+    // assert - staging deployments should appear (may also appear in overview matrix)
+    const orderElements = await screen.findAllByText("order-service");
+    expect(orderElements.length).toBeGreaterThanOrEqual(1);
+    const paymentElements = await screen.findAllByText("payment-service");
+    expect(paymentElements.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should highlight the selected environment button", async () => {
@@ -128,8 +132,9 @@ describe("EnvironmentsPage", () => {
     // act
     await user.click(screen.getByRole("button", { name: /^production/ }));
 
-    // assert
-    expect(await screen.findByText("0.9.0")).toBeInTheDocument();
+    // assert - version may appear in both the overview matrix and the deployment table
+    const elements = await screen.findAllByText("0.9.0");
+    expect(elements.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should handle empty environment with no deployments", async () => {

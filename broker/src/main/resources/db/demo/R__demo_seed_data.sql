@@ -22,14 +22,14 @@ VALUES
 -- ============================================================
 -- Applications
 -- ============================================================
-INSERT INTO applications (name, description, owner)
+INSERT INTO applications (name, description, owner, repository_url)
 VALUES
-    ('order-service',        'Manages customer orders',           'team-orders'),
-    ('payment-service',      'Processes payments and refunds',    'team-payments'),
-    ('notification-service', 'Sends emails, SMS & push',          'team-notifications'),
-    ('inventory-service',    'Tracks warehouse stock levels',     'team-inventory'),
-    ('user-service',         'Authentication & user profiles',    'team-identity'),
-    ('api-gateway',          'Edge proxy & request routing',      'team-platform');
+    ('order-service',        'Manages customer orders',           'team-orders',         'https://github.com/example/order-service'),
+    ('payment-service',      'Processes payments and refunds',    'team-payments',       'https://github.com/example/payment-service'),
+    ('notification-service', 'Sends emails, SMS & push',          'team-notifications',  'https://github.com/example/notification-service'),
+    ('inventory-service',    'Tracks warehouse stock levels',     'team-inventory',      'https://github.com/example/inventory-service'),
+    ('user-service',         'Authentication & user profiles',    'team-identity',       'https://github.com/example/user-service'),
+    ('api-gateway',          'Edge proxy & request routing',      'team-platform',       'https://github.com/example/api-gateway');
 
 -- ============================================================
 -- Contracts
@@ -218,18 +218,20 @@ VALUES
      (SELECT id FROM applications WHERE name = 'user-service'), '3.1.0',
      'SUCCESS', 'All 1 contract tests passed');
 
--- inventory-service v1.1.0 verified against order-service v1.1.0: FAILED
+-- order-service v1.1.0 verified against inventory-service v1.1.0: FAILED
+-- (order-service is the provider/API, inventory-service is the consumer calling it)
 INSERT INTO verifications (provider_id, provider_version, consumer_id, consumer_version, status, details)
 VALUES
-    ((SELECT id FROM applications WHERE name = 'inventory-service'), '1.1.0',
-     (SELECT id FROM applications WHERE name = 'order-service'), '1.1.0',
+    ((SELECT id FROM applications WHERE name = 'order-service'), '1.1.0',
+     (SELECT id FROM applications WHERE name = 'inventory-service'), '1.1.0',
      'FAILED', 'Contract shouldReserveStock.yml failed: expected status 200 but got 400 — missing required field "warehouse"');
 
--- inventory-service v1.1.0 verified against order-service v1.2.0: SUCCESS
+-- order-service v1.2.0 verified against inventory-service v1.1.0: SUCCESS
+-- (order-service is the provider/API, inventory-service is the consumer calling it)
 INSERT INTO verifications (provider_id, provider_version, consumer_id, consumer_version, status, details)
 VALUES
-    ((SELECT id FROM applications WHERE name = 'inventory-service'), '1.1.0',
-     (SELECT id FROM applications WHERE name = 'order-service'), '1.2.0',
+    ((SELECT id FROM applications WHERE name = 'order-service'), '1.2.0',
+     (SELECT id FROM applications WHERE name = 'inventory-service'), '1.1.0',
      'SUCCESS', 'All 2 contract tests passed');
 
 -- ============================================================

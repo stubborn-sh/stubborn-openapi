@@ -60,10 +60,13 @@ describe("Dashboard", () => {
     const user = userEvent.setup();
     renderWithProviders(<DashboardPage />);
 
-    // Wait for recent verifications to load
-    const rows = await screen.findAllByText("order-service");
-    // Click the row (the outer div), not the app link button
-    const row = rows[0].closest("[class*='cursor-pointer']");
+    // Wait for recent verifications data to load (order-service appears in verification rows)
+    const providerLinks = await screen.findAllByText("order-service");
+    // Find the verification row: a div[role="button"] ancestor with cursor-pointer
+    const row = providerLinks
+      .map((el) => el.closest("[role='button']"))
+      .find((el) => el?.className.includes("cursor-pointer"));
+    expect(row).toBeTruthy();
     if (row) await user.click(row);
 
     expect(mockNavigate).toHaveBeenCalledWith("/verifications?search=order-service");

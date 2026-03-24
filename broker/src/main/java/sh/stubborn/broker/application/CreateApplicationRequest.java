@@ -21,5 +21,6 @@ import jakarta.validation.constraints.Size;
 import org.jspecify.annotations.Nullable;
 
 record CreateApplicationRequest(@NotBlank @Size(max = 128) String name, @Nullable @Size(max = 1000) String description,
-		@NotBlank @Size(max = 100) String owner, @Nullable @Size(max = 128) String mainBranch) {
+		@NotBlank @Size(max = 100) String owner, @Nullable @Size(max = 128) String mainBranch,
+		@Nullable @Size(max = 2048) String repositoryUrl) {
 }

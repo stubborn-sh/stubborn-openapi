@@ -4,6 +4,7 @@ export interface ApplicationResponse {
   description: string;
   owner: string;
   mainBranch: string | null;
+  repositoryUrl: string | null;
   createdAt: string;
 }
 

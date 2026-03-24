@@ -1,8 +1,9 @@
 import { useApplications } from "@/features/applications";
 import { useVerifications } from "@/features/verifications";
+import { useGraph } from "@/features/graph/useGraph";
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui";
-import { FileCode2, CheckCircle2, XCircle, Activity } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { FileCode2, CheckCircle2, XCircle, Activity, GitBranch } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AreaChart,
   Area,
@@ -31,6 +32,7 @@ export default function DashboardPage() {
     isLoading: verificationsLoading,
     error: verificationsError,
   } = useVerifications();
+  const { data: graphData } = useGraph();
 
   if (appsError || verificationsError)
     return <p className="text-red-600">Failed to load dashboard data</p>;
@@ -116,6 +118,66 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-foreground">Dependency Graph</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">
+                Recent dependency edges between services
+              </p>
+            </div>
+            <GitBranch className="h-5 w-5 text-muted-foreground" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          {graphData && graphData.edges.length > 0 ? (
+            <div className="space-y-3">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left py-2 text-muted-foreground font-medium">Provider</th>
+                      <th className="text-left py-2 text-muted-foreground font-medium"></th>
+                      <th className="text-left py-2 text-muted-foreground font-medium">Consumer</th>
+                      <th className="text-left py-2 text-muted-foreground font-medium">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {graphData.edges.slice(0, 5).map((edge, i) => (
+                      <tr key={i} className="border-b border-border last:border-0">
+                        <td className="py-2 text-foreground">
+                          {edge.providerName}{" "}
+                          <span className="text-muted-foreground text-xs">{edge.providerVersion}</span>
+                        </td>
+                        <td className="py-2 text-muted-foreground">{"<-"}</td>
+                        <td className="py-2 text-foreground">
+                          {edge.consumerName}{" "}
+                          <span className="text-muted-foreground text-xs">{edge.consumerVersion}</span>
+                        </td>
+                        <td className="py-2">
+                          <Badge variant={edge.status === "SUCCESS" ? "success" : "failed"}>
+                            {edge.status}
+                          </Badge>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <Link
+                to="/graph"
+                className="inline-block text-sm text-emerald-700 hover:underline dark:text-emerald-400"
+              >
+                View full graph
+              </Link>
+            </div>
+          ) : (
+            <p className="text-muted-foreground text-sm">No dependency data available</p>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

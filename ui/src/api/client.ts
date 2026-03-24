@@ -77,7 +77,7 @@ export const api = {
       return page.content.map((a) => a.name);
     },
     get: (name: string) => fetchJson<ApplicationResponse>(`/api/v1/applications/${name}`),
-    create: (data: { name: string; description: string; owner: string }) =>
+    create: (data: { name: string; description: string; owner: string; repositoryUrl?: string }) =>
       fetchJson<ApplicationResponse>("/api/v1/applications", {
         method: "POST",
         body: JSON.stringify(data),

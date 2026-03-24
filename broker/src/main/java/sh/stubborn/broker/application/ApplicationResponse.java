@@ -21,11 +21,11 @@ import java.util.UUID;
 import org.jspecify.annotations.Nullable;
 
 record ApplicationResponse(UUID id, String name, @Nullable String description, String owner, String mainBranch,
-		Instant createdAt, Instant updatedAt) {
+		@Nullable String repositoryUrl, Instant createdAt, Instant updatedAt) {
 
 	static ApplicationResponse from(Application app) {
 		return new ApplicationResponse(app.getId(), app.getName(), app.getDescription(), app.getOwner(),
-				app.getMainBranch(), app.getCreatedAt(), app.getUpdatedAt());
+				app.getMainBranch(), app.getRepositoryUrl(), app.getCreatedAt(), app.getUpdatedAt());
 	}
 
 }

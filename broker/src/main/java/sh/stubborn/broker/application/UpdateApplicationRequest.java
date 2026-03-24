@@ -18,5 +18,8 @@ package sh.stubborn.broker.application;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-record UpdateApplicationRequest(@NotBlank @Size(max = 128) String mainBranch) {
+import org.jspecify.annotations.Nullable;
+
+record UpdateApplicationRequest(@NotBlank @Size(max = 128) String mainBranch,
+		@Nullable @Size(max = 2048) String repositoryUrl) {
 }

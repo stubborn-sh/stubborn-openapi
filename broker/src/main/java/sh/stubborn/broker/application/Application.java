@@ -48,6 +48,9 @@ class Application {
 	@Column(name = "main_branch", length = 128)
 	private String mainBranch;
 
+	@Column(name = "repository_url", length = 2048)
+	private String repositoryUrl;
+
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private Instant createdAt;
 
@@ -60,26 +63,38 @@ class Application {
 	protected Application() {
 	}
 
-	private Application(String name, @Nullable String description, String owner, @Nullable String mainBranch) {
+	private Application(String name, @Nullable String description, String owner, @Nullable String mainBranch,
+			@Nullable String repositoryUrl) {
 		ApplicationName.of(name);
 		this.name = name;
 		this.description = description;
 		this.owner = owner;
 		this.mainBranch = (mainBranch != null) ? mainBranch : "main";
+		this.repositoryUrl = repositoryUrl;
 		this.createdAt = Instant.now();
 		this.updatedAt = this.createdAt;
 	}
 
+	static Application create(String name, @Nullable String description, String owner, @Nullable String mainBranch,
+			@Nullable String repositoryUrl) {
+		return new Application(name, description, owner, mainBranch, repositoryUrl);
+	}
+
 	static Application create(String name, @Nullable String description, String owner, @Nullable String mainBranch) {
-		return new Application(name, description, owner, mainBranch);
+		return create(name, description, owner, mainBranch, null);
 	}
 
 	static Application create(String name, @Nullable String description, String owner) {
-		return create(name, description, owner, null);
+		return create(name, description, owner, null, null);
 	}
 
 	void updateMainBranch(String mainBranch) {
 		this.mainBranch = mainBranch;
+		this.updatedAt = Instant.now();
+	}
+
+	void updateRepositoryUrl(@Nullable String repositoryUrl) {
+		this.repositoryUrl = repositoryUrl;
 		this.updatedAt = Instant.now();
 	}
 
@@ -101,6 +116,10 @@ class Application {
 
 	String getMainBranch() {
 		return this.mainBranch;
+	}
+
+	String getRepositoryUrl() {
+		return this.repositoryUrl;
 	}
 
 	Instant getCreatedAt() {

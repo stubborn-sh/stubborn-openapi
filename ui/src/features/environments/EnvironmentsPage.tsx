@@ -6,6 +6,7 @@ import {
   useCreateDeployment,
   useCreateEnvironment,
   useDeleteEnvironment,
+  useDeploymentMatrix,
 } from "./useEnvironments";
 import { useSearchApplications, useVersions } from "@/features/applications";
 import { DataTable, AsyncComboBox, ComboBox } from "@/shared/components";
@@ -47,6 +48,10 @@ export default function EnvironmentsPage() {
   const createDeployment = useCreateDeployment(selectedEnv);
   const createEnvironment = useCreateEnvironment();
   const deleteEnvironment = useDeleteEnvironment();
+  const {
+    matrix,
+    isLoading: matrixLoading,
+  } = useDeploymentMatrix(environments);
 
   const handleDeploy = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -204,6 +209,80 @@ export default function EnvironmentsPage() {
                 </p>
               )}
             </form>
+          </CardContent>
+        </Card>
+      )}
+
+      {environments && environments.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-foreground">Deployment Overview</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Application versions across all environments
+            </p>
+          </CardHeader>
+          <CardContent>
+            {matrixLoading ? (
+              <p className="text-muted-foreground text-sm">Loading matrix...</p>
+            ) : matrix.length === 0 ? (
+              <p className="text-muted-foreground text-sm">No deployments recorded</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left py-2 text-muted-foreground font-medium">
+                        Application
+                      </th>
+                      {environments
+                        .sort((a, b) => a.displayOrder - b.displayOrder)
+                        .map((env) => (
+                          <th
+                            key={env.name}
+                            className="text-left py-2 text-muted-foreground font-medium"
+                          >
+                            {env.name}
+                          </th>
+                        ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {matrix.map((row) => {
+                      const sortedEnvs = environments
+                        .slice()
+                        .sort((a, b) => a.displayOrder - b.displayOrder);
+                      const deployedVersions = sortedEnvs
+                        .map((env) => row.versions[env.name])
+                        .filter(Boolean);
+                      const allSame =
+                        deployedVersions.length > 0 &&
+                        deployedVersions.every((v) => v === deployedVersions[0]);
+                      return (
+                        <tr key={row.applicationName} className="border-b border-border last:border-0">
+                          <td className="py-2 text-foreground font-medium">{row.applicationName}</td>
+                          {sortedEnvs.map((env) => {
+                            const version = row.versions[env.name];
+                            return (
+                              <td key={env.name} className="py-2">
+                                {version ? (
+                                  <Badge
+                                    variant={allSame ? "success" : "default"}
+                                  >
+                                    {version}
+                                  </Badge>
+                                ) : (
+                                  <span className="text-muted-foreground">-</span>
+                                )}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

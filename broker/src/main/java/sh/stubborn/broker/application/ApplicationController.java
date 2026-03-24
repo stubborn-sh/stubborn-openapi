@@ -51,7 +51,7 @@ class ApplicationController {
 	@PostMapping
 	ResponseEntity<ApplicationResponse> register(@Valid @RequestBody CreateApplicationRequest request) {
 		Application app = this.applicationService.register(request.name(), request.description(), request.owner(),
-				request.mainBranch());
+				request.mainBranch(), request.repositoryUrl());
 		ApplicationResponse response = ApplicationResponse.from(app);
 		return ResponseEntity.created(URI.create("/api/v1/applications/" + app.getName())).body(response);
 	}
@@ -59,7 +59,7 @@ class ApplicationController {
 	@PutMapping("/{name}")
 	ResponseEntity<ApplicationResponse> update(@PathVariable String name,
 			@Valid @RequestBody UpdateApplicationRequest request) {
-		Application app = this.applicationService.updateMainBranch(name, request.mainBranch());
+		Application app = this.applicationService.update(name, request.mainBranch(), request.repositoryUrl());
 		return ResponseEntity.ok(ApplicationResponse.from(app));
 	}
 
