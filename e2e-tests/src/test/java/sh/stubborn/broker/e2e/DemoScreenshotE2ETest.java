@@ -205,7 +205,8 @@ class DemoScreenshotE2ETest {
 		// Fill in the form with demo data: order-service 1.2.0 to production
 		selectComboBox(0, "order-service");
 		selectComboBox(1, "1.2.0");
-		selectComboBox(2, "production");
+		// Environment is a native <select>, not a combo box
+		this.page.selectOption("select#cid-environment", "production");
 
 		// Submit the form
 		Locator checkButton = this.page.locator("button:has-text('Check')");
@@ -214,8 +215,7 @@ class DemoScreenshotE2ETest {
 
 		// Wait for the result to appear
 		this.page.waitForLoadState(LoadState.NETWORKIDLE);
-		this.page.locator("[data-testid='deploy-result'], [class*='result'], [class*='Result']").first()
-			.waitFor(new Locator.WaitForOptions().setTimeout(60000));
+		waitForText("Result");
 		screenshot("demo-can-i-deploy-result");
 	}
 
