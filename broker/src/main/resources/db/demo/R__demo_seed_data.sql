@@ -94,6 +94,31 @@ VALUES
      'application/x-spring-cloud-contract+yaml',
      'c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
 
+-- order-service v1.3.0-feat on branch feature/payments (Team-tier branch awareness)
+INSERT INTO contracts (application_id, version, contract_name, content, content_type, content_hash, branch)
+VALUES
+    ((SELECT id FROM applications WHERE name = 'order-service'), '1.3.0-feat', 'shouldReturnOrder.yml',
+     E'request:\n  method: GET\n  url: /api/orders/1\nresponse:\n  status: 200\n  headers:\n    Content-Type: application/json\n  body:\n    id: 1\n    status: CREATED\n    total: 99.99\n    currency: USD\n    paymentMethod: CARD',
+     'application/x-spring-cloud-contract+yaml',
+     'f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2',
+     'feature/payments');
+
+INSERT INTO contracts (application_id, version, contract_name, content, content_type, content_hash, branch)
+VALUES
+    ((SELECT id FROM applications WHERE name = 'order-service'), '1.3.0-feat', 'shouldProcessPaymentCallback.yml',
+     E'request:\n  method: POST\n  url: /api/orders/1/payment-callback\n  headers:\n    Content-Type: application/json\n  body:\n    transactionId: txn-789\n    status: COMPLETED\nresponse:\n  status: 200\n  body:\n    id: 1\n    status: PAID',
+     'application/x-spring-cloud-contract+yaml',
+     'a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3',
+     'feature/payments');
+
+-- Verification for branch-specific version (feature/payments)
+INSERT INTO verifications (provider_id, provider_version, consumer_id, consumer_version, status, details, branch)
+VALUES
+    ((SELECT id FROM applications WHERE name = 'order-service'), '1.3.0-feat',
+     (SELECT id FROM applications WHERE name = 'payment-service'), '2.1.0',
+     'SUCCESS', 'All 2 contract tests passed on feature/payments branch',
+     'feature/payments');
+
 -- payment-service v2.0.0
 INSERT INTO contracts (application_id, version, contract_name, content, content_type, content_hash)
 VALUES

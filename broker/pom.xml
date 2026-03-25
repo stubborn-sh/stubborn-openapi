@@ -365,6 +365,27 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>check</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<rule>
+									<element>BUNDLE</element>
+									<limits>
+										<limit>
+											<counter>LINE</counter>
+											<value>COVEREDRATIO</value>
+											<minimum>0.70</minimum>
+										</limit>
+									</limits>
+								</rule>
+							</rules>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 
@@ -484,7 +505,7 @@
 							<sourceHighlighter>highlight.js</sourceHighlighter>
 							<attributes>
 								<docdir>${maven.multiModuleProjectDirectory}/docs/src/docs/asciidoc</docdir>
-								<test-src>${project.basedir}/src/test/java/org/springframework/cloud/contract/broker</test-src>
+								<test-src>${project.basedir}/src/test/java/sh/stubborn/broker</test-src>
 								<snippets>${project.build.directory}/generated-snippets</snippets>
 								<toc>left</toc>
 								<toclevels>3</toclevels>

@@ -85,6 +85,10 @@ jobs:
             **/target/failsafe-reports/
           retention-days: 7
 
+      - name: Mutation tests
+        run: ./mvnw pitest:mutationTest -pl broker -DtimeoutConstant=10000
+        continue-on-error: true
+
       - name: Upload E2E screenshots
         if: always()
         uses: actions/upload-artifact@v7

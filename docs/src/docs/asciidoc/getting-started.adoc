@@ -10,12 +10,25 @@ Without a broker, contract testing artifacts are scattered across Maven reposito
 Teams cannot easily answer: "Is it safe to deploy version X?" or "Who depends on my API?"
 The broker centralizes this information and adds a safety gate (Can I Deploy) to your CI/CD pipeline.
 
-== Prerequisites
+== Quick Start
+
+The fastest way to get the broker running is with Docker:
+
+[source,bash]
+----
+docker run -p 8080:8080 mgrzejszczak/stubborn
+----
+
+The broker is now available at http://localhost:8080.
+
+== Development Setup
+
+=== Prerequisites
 
 - Java 25+
 - Docker (for dev mode and integration tests)
 
-== Quick Start
+=== Running from Source
 
 [source,bash]
 ----

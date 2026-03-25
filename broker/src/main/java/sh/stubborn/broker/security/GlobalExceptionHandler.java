@@ -33,6 +33,7 @@ import sh.stubborn.broker.environment.EnvironmentNotFoundException;
 import sh.stubborn.broker.verification.VerificationAlreadyExistsException;
 import sh.stubborn.broker.verification.VerificationNotFoundException;
 import sh.stubborn.broker.tag.TagNotFoundException;
+import sh.stubborn.broker.mavenimport.MavenImportSourceNotFoundException;
 import sh.stubborn.broker.webhook.WebhookNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -119,6 +120,12 @@ public class GlobalExceptionHandler {
 	ResponseEntity<ErrorResponse> handleTagNotFound(TagNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 			.body(ErrorResponse.of("TAG_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+	}
+
+	@ExceptionHandler(MavenImportSourceNotFoundException.class)
+	ResponseEntity<ErrorResponse> handleMavenImportSourceNotFound(MavenImportSourceNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(ErrorResponse.of("IMPORT_SOURCE_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
