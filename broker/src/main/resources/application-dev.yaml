@@ -19,4 +19,4 @@ management:
 
 logging:
   level:
-    sh.stubborn.broker: DEBUG
+    sh.stubborn.oss: DEBUG

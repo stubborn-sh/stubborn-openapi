@@ -1,2 +1,2 @@
 org.springframework.cloud.contract.stubrunner.StubDownloaderBuilder=\
-  sh.stubborn.broker.stubdownloader.BrokerStubDownloaderBuilder
+  sh.stubborn.oss.stubdownloader.BrokerStubDownloaderBuilder

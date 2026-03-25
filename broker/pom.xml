@@ -428,17 +428,17 @@
 				<artifactId>pitest-maven</artifactId>
 				<configuration>
 					<targetClasses>
-						<param>sh.stubborn.broker.**</param>
+						<param>sh.stubborn.oss.**</param>
 					</targetClasses>
 					<excludedClasses>
-						<param>sh.stubborn.broker.application.Application</param>
-						<param>sh.stubborn.broker.contract.Contract</param>
-						<param>sh.stubborn.broker.environment.Deployment</param>
-						<param>sh.stubborn.broker.verification.Verification</param>
-						<param>sh.stubborn.broker.security.SecurityConfig</param>
-						<param>sh.stubborn.broker.security.UserConfig</param>
-						<param>sh.stubborn.broker.environment.DeploymentInfo</param>
-						<param>sh.stubborn.broker.**.*Exception</param>
+						<param>sh.stubborn.oss.application.Application</param>
+						<param>sh.stubborn.oss.contract.Contract</param>
+						<param>sh.stubborn.oss.environment.Deployment</param>
+						<param>sh.stubborn.oss.verification.Verification</param>
+						<param>sh.stubborn.oss.security.SecurityConfig</param>
+						<param>sh.stubborn.oss.security.UserConfig</param>
+						<param>sh.stubborn.oss.environment.DeploymentInfo</param>
+						<param>sh.stubborn.oss.**.*Exception</param>
 					</excludedClasses>
 					<jvmArgs>
 						<jvmArg>--add-opens=java.base/java.lang=ALL-UNNAMED</jvmArg>
@@ -449,8 +449,8 @@
 						<jvmArg>--add-opens=java.base/sun.nio.cs=ALL-UNNAMED</jvmArg>
 					</jvmArgs>
 					<targetTests>
-						<param>sh.stubborn.broker.**.*Test</param>
-						<param>sh.stubborn.broker.**.*Properties</param>
+						<param>sh.stubborn.oss.**.*Test</param>
+						<param>sh.stubborn.oss.**.*Properties</param>
 					</targetTests>
 					<excludedTestClasses>
 						<param>**.*E2ETest</param>

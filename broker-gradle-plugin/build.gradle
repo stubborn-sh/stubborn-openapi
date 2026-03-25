@@ -33,7 +33,7 @@ gradlePlugin {
 	plugins {
 		broker {
 			id = 'sh.stubborn.broker'
-			implementationClass = 'sh.stubborn.broker.gradle.BrokerPlugin'
+			implementationClass = 'sh.stubborn.oss.gradle.BrokerPlugin'
 			displayName = 'Stubborn Broker Plugin'
 			description = 'Publishes contracts to Stubborn Broker'
 			tags.set(['spring-cloud-contract', 'contract-testing', 'broker'])
