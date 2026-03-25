@@ -165,7 +165,7 @@ FROM eclipse-temurin:25-jre
 COPY broker.jar /app/broker.jar
 
 # Pro image extends OSS
-FROM ghcr.io/spring-cloud/scc-broker:latest
+FROM ghcr.io/spring-cloud/stubborn:latest
 COPY broker-pro.jar /app/libs/broker-pro.jar
 ```
 

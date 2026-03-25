@@ -43,11 +43,11 @@ java -jar broker-cli/target/broker-cli.jar --help
 [source,bash]
 ----
 # List applications
-scc-broker app list
+stubborn app list
 
 # Check deployment safety
-scc-broker can-i-deploy --app order-service --version 1.0.0 --env staging
+stubborn can-i-deploy --app order-service --version 1.0.0 --env staging
 
 # List webhooks in JSON format
-scc-broker --format json webhook list
+stubborn --format json webhook list
 ----

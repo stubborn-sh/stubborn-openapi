@@ -57,7 +57,7 @@ image::demo-dashboard.png[Dashboard,width=100%]
 
 == 5-Minute Walkthrough
 
-Once the broker is running, you can interact with the REST API using `curl` or the `scc-broker` CLI.
+Once the broker is running, you can interact with the REST API using `curl` or the `stubborn` CLI.
 The default users are `admin:admin` (full access), `publisher:publisher` (read + write), and `reader:reader` (read only).
 
 To use the CLI instead of curl:

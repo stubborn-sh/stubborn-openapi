@@ -21,7 +21,7 @@ The SDK provides:
 - Provider verification with automatic response validation and matcher support
 - Stub server that serves contract responses for consumer integration tests
 - Jest/Vitest integration helpers (`setupStubs`, `teardownStubs`, `withStubs`)
-- CLI for terminal-based broker interaction (`scc-broker` commands)
+- CLI for terminal-based broker interaction (`stubborn` commands)
 
 ## How (High Level)
 
