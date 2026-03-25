@@ -35,7 +35,6 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.cloud.contract.wiremock.restdocs.SpringCloudContractRestDocs.dslContract;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,10 +60,9 @@ class SelectorContractTest {
 			.willReturn(List.of(new ResolvedContract("selector-consumer", "2.0.0", "main", "create-order", "abc123")));
 
 		// when/then
-		this.mockMvc
-			.perform(post("/api/v1/selectors/resolve").with(csrf()).contentType(MediaType.APPLICATION_JSON).content("""
-					{"selectors":[{"mainBranch":true,"deployed":false}]}
-					"""))
+		this.mockMvc.perform(post("/api/v1/selectors/resolve").contentType(MediaType.APPLICATION_JSON).content("""
+				{"selectors":[{"mainBranch":true,"deployed":false}]}
+				"""))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[0].consumerName").value("selector-consumer"))
 			.andExpect(jsonPath("$[0].version").value("2.0.0"))
@@ -79,10 +77,9 @@ class SelectorContractTest {
 			.willReturn(List.of(new ResolvedContract("env-consumer", "1.0.0", null, "get-order", null)));
 
 		// when/then
-		this.mockMvc
-			.perform(post("/api/v1/selectors/resolve").with(csrf()).contentType(MediaType.APPLICATION_JSON).content("""
-					{"selectors":[{"mainBranch":false,"deployed":true,"environment":"production"}]}
-					"""))
+		this.mockMvc.perform(post("/api/v1/selectors/resolve").contentType(MediaType.APPLICATION_JSON).content("""
+				{"selectors":[{"mainBranch":false,"deployed":true,"environment":"production"}]}
+				"""))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[0].consumerName").value("env-consumer"))
 			.andDo(contractDocument("resolve-selectors-by-environment"));

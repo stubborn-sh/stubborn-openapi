@@ -34,7 +34,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.cloud.contract.wiremock.restdocs.SpringCloudContractRestDocs.dslContract;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,11 +60,9 @@ class CleanupContractTest {
 					"cleanup-app:0.3.0:contract-c")));
 
 		// when/then
-		this.mockMvc
-			.perform(
-					post("/api/v1/maintenance/cleanup").with(csrf()).contentType(MediaType.APPLICATION_JSON).content("""
-							{"keepLatestVersions":5,"protectedEnvironments":["production","staging"]}
-							"""))
+		this.mockMvc.perform(post("/api/v1/maintenance/cleanup").contentType(MediaType.APPLICATION_JSON).content("""
+				{"keepLatestVersions":5,"protectedEnvironments":["production","staging"]}
+				"""))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.deletedCount").value(3))
 			.andExpect(jsonPath("$.deletedContracts[0]").value("cleanup-app:0.1.0:contract-a"))
@@ -79,13 +76,9 @@ class CleanupContractTest {
 			.willReturn(new CleanupResult(1, List.of("cleanup-single-app:0.1.0:old-contract")));
 
 		// when/then
-		this.mockMvc
-			.perform(post("/api/v1/maintenance/cleanup").with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(
-						"""
-								{"applicationName":"cleanup-single-app","keepLatestVersions":3,"protectedEnvironments":["production"]}
-								"""))
+		this.mockMvc.perform(post("/api/v1/maintenance/cleanup").contentType(MediaType.APPLICATION_JSON).content("""
+				{"applicationName":"cleanup-single-app","keepLatestVersions":3,"protectedEnvironments":["production"]}
+				"""))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.deletedCount").value(1))
 			.andDo(contractDocument("cleanup-single-app"));

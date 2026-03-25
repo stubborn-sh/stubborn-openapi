@@ -35,7 +35,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.cloud.contract.wiremock.restdocs.SpringCloudContractRestDocs.dslContract;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -63,7 +62,7 @@ class TagContractTest {
 		given(this.tagService.addTag("tag-app", "1.0.0", "RELEASE")).willReturn(versionTag);
 
 		// when/then
-		this.mockMvc.perform(put("/api/v1/applications/tag-app/versions/1.0.0/tags/RELEASE").with(csrf()))
+		this.mockMvc.perform(put("/api/v1/applications/tag-app/versions/1.0.0/tags/RELEASE"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.tag").value("RELEASE"))
 			.andExpect(jsonPath("$.version").value("1.0.0"))
@@ -100,7 +99,7 @@ class TagContractTest {
 	@Test
 	void should_remove_tag() throws Exception {
 		// when/then
-		this.mockMvc.perform(delete("/api/v1/applications/tag-remove-app/versions/1.0.0/tags/OLD").with(csrf()))
+		this.mockMvc.perform(delete("/api/v1/applications/tag-remove-app/versions/1.0.0/tags/OLD"))
 			.andExpect(status().isNoContent())
 			.andDo(contractDocument("remove-tag"));
 	}

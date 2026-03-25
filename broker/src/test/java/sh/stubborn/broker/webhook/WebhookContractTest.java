@@ -41,7 +41,6 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.cloud.contract.wiremock.restdocs.SpringCloudContractRestDocs.dslContract;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -75,8 +74,7 @@ class WebhookContractTest {
 
 		// when/then
 		this.mockMvc
-			.perform(post("/api/v1/webhooks").with(csrf())
-				.contentType(MediaType.APPLICATION_JSON)
+			.perform(post("/api/v1/webhooks").contentType(MediaType.APPLICATION_JSON)
 				.content(
 						"""
 								{"applicationName":"webhook-app","eventType":"CONTRACT_PUBLISHED","url":"https://hooks.example.com/contracts"}
@@ -130,7 +128,7 @@ class WebhookContractTest {
 		given(this.webhookService.findById(id)).willReturn(webhook);
 
 		// when/then
-		this.mockMvc.perform(delete("/api/v1/webhooks/{id}", id).with(csrf()))
+		this.mockMvc.perform(delete("/api/v1/webhooks/{id}", id))
 			.andExpect(status().isNoContent())
 			.andDo(contractDocument("delete-webhook"));
 	}
