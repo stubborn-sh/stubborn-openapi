@@ -33,6 +33,7 @@ import sh.stubborn.broker.environment.EnvironmentNotFoundException;
 import sh.stubborn.broker.verification.VerificationAlreadyExistsException;
 import sh.stubborn.broker.verification.VerificationNotFoundException;
 import sh.stubborn.broker.tag.TagNotFoundException;
+import sh.stubborn.broker.mavenimport.MavenImportException;
 import sh.stubborn.broker.mavenimport.MavenImportSourceNotFoundException;
 import sh.stubborn.broker.webhook.WebhookNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -126,6 +127,12 @@ public class GlobalExceptionHandler {
 	ResponseEntity<ErrorResponse> handleMavenImportSourceNotFound(MavenImportSourceNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 			.body(ErrorResponse.of("IMPORT_SOURCE_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+	}
+
+	@ExceptionHandler(MavenImportException.class)
+	ResponseEntity<ErrorResponse> handleMavenImportException(MavenImportException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(ErrorResponse.of("MAVEN_IMPORT_ERROR", Objects.requireNonNull(ex.getMessage()), getTraceId()));
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)

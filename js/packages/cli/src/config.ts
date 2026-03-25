@@ -47,7 +47,7 @@ export async function resolveCliConfig(flags: Partial<CliConfig>): Promise<CliCo
 async function loadConfigFile(): Promise<ConfigFile | null> {
   const configPath = join(
     process.env["HOME"] ?? process.env["USERPROFILE"] ?? ".",
-    ".scc-broker.json",
+    ".stubborn.json",
   );
 
   try {

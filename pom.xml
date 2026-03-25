@@ -9,7 +9,7 @@
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Stubborn</name>
-	<description>Governance server for Spring Cloud Contract (like Pact Broker but SCC-native)</description>
+	<description>Stubborn — contract governance broker for Spring Cloud Contract</description>
 	<url>https://stubborn.sh</url>
 
 	<licenses>

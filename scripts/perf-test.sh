@@ -59,7 +59,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "=== Spring Cloud Contract Broker — Performance Tests ==="
+echo "=== Stubborn Broker — Performance Tests ==="
 echo "Users: $USERS | Duration: ${DURATION}s | Auth: $BROKER_USER"
 
 # Step 1: Build if needed
@@ -80,7 +80,7 @@ if [[ -z "$BROKER_URL" ]]; then
 
   echo ""
   echo "--- Starting broker ---"
-  java -jar broker-oss/broker/target/spring-cloud-contract-broker-*.jar \
+  java -jar broker-oss/broker/target/stubborn-broker-*.jar \
     --spring.datasource.url=jdbc:postgresql://localhost:5432/broker \
     --spring.datasource.username=broker \
     --spring.datasource.password=broker \
