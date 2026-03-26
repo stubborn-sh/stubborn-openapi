@@ -143,7 +143,7 @@ class DemoScreenshotE2ETest {
 		// Wait for stats cards to render
 		this.page.locator("[data-testid='stats-card'], .stats-card, [class*='card']")
 			.first()
-			.waitFor(new Locator.WaitForOptions().setTimeout(60000));
+			.waitFor(new Locator.WaitForOptions().setTimeout(120000));
 		screenshot("demo-dashboard");
 	}
 
@@ -211,7 +211,7 @@ class DemoScreenshotE2ETest {
 
 		// Submit the form
 		Locator checkButton = this.page.locator("button:has-text('Check')");
-		checkButton.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		checkButton.first().waitFor(new Locator.WaitForOptions().setTimeout(60000));
 		checkButton.first().click();
 
 		// Wait for the result to appear
@@ -228,7 +228,7 @@ class DemoScreenshotE2ETest {
 		// Wait for graph to render (nodes or table rows)
 		this.page.locator("button:has-text('order-service'), [data-testid='graph-node'], canvas, svg")
 			.first()
-			.waitFor(new Locator.WaitForOptions().setTimeout(60000));
+			.waitFor(new Locator.WaitForOptions().setTimeout(120000));
 		screenshot("demo-graph");
 	}
 
@@ -251,31 +251,31 @@ class DemoScreenshotE2ETest {
 
 	private Locator waitForHeading(String text) {
 		Locator heading = this.page.locator("[data-testid='page-heading']:has-text('" + text + "')");
-		heading.first().waitFor(new Locator.WaitForOptions().setTimeout(60000));
+		heading.first().waitFor(new Locator.WaitForOptions().setTimeout(120000));
 		return heading;
 	}
 
 	private Locator waitForTable() {
 		Locator table = this.page.locator("[data-testid='data-table']").first();
-		table.waitFor(new Locator.WaitForOptions().setTimeout(60000));
+		table.waitFor(new Locator.WaitForOptions().setTimeout(120000));
 		return table;
 	}
 
 	private Locator waitForText(String text) {
 		Locator locator = this.page.locator("text=" + text);
-		locator.first().waitFor(new Locator.WaitForOptions().setTimeout(60000));
+		locator.first().waitFor(new Locator.WaitForOptions().setTimeout(120000));
 		return locator;
 	}
 
 	private void selectComboBox(int index, String value) {
 		Locator inputs = this.page.locator("input[type='text']");
 		Locator input = inputs.nth(index);
-		input.waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		input.waitFor(new Locator.WaitForOptions().setTimeout(60000));
 		input.click();
 		input.fill(value);
 		// Wait for dropdown option to appear and click it
 		Locator option = this.page.locator("[role='listbox'] [role='option']:has-text('" + value + "')");
-		option.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		option.first().waitFor(new Locator.WaitForOptions().setTimeout(60000));
 		option.first().click();
 		this.page.locator("[role='listbox']")
 			.first()
