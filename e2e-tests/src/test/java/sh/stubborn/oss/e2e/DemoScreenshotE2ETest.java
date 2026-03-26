@@ -44,9 +44,9 @@ import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Captures screenshots of every key UI page running in demo mode. The demo profile
- * seeds 6 applications, contracts, verifications, and deployments so all pages have
- * realistic data. Screenshots are saved to {@code target/screenshots/} and copied to
+ * Captures screenshots of every key UI page running in demo mode. The demo profile seeds
+ * 6 applications, contracts, verifications, and deployments so all pages have realistic
+ * data. Screenshots are saved to {@code target/screenshots/} and copied to
  * {@code docs/screenshots/} for use in README and presentations.
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -141,7 +141,8 @@ class DemoScreenshotE2ETest {
 		navigateTo("/dashboard");
 		waitForHeading("Dashboard");
 		// Wait for stats cards to render
-		this.page.locator("[data-testid='stats-card'], .stats-card, [class*='card']").first()
+		this.page.locator("[data-testid='stats-card'], .stats-card, [class*='card']")
+			.first()
 			.waitFor(new Locator.WaitForOptions().setTimeout(60000));
 		screenshot("demo-dashboard");
 	}
@@ -225,7 +226,8 @@ class DemoScreenshotE2ETest {
 		navigateTo("/graph");
 		waitForHeading("Dependencies");
 		// Wait for graph to render (nodes or table rows)
-		this.page.locator("button:has-text('order-service'), [data-testid='graph-node'], canvas, svg").first()
+		this.page.locator("button:has-text('order-service'), [data-testid='graph-node'], canvas, svg")
+			.first()
 			.waitFor(new Locator.WaitForOptions().setTimeout(60000));
 		screenshot("demo-graph");
 	}
