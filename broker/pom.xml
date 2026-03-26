@@ -281,7 +281,7 @@
 					</execution>
 					<execution>
 						<id>build-docker-image</id>
-						<phase>pre-integration-test</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>build-image-no-fork</goal>
 						</goals>

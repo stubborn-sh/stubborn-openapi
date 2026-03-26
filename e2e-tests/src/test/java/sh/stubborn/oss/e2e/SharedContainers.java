@@ -79,8 +79,7 @@ final class SharedContainers {
 		GenericContainer<?> proxyContainer = null;
 		String proxyUrl = null;
 		try {
-			proxyContainer = new GenericContainer<>("mgrzejszczak/stubborn-proxy:0.1.0-SNAPSHOT")
-				.withNetwork(NETWORK)
+			proxyContainer = new GenericContainer<>("mgrzejszczak/stubborn-proxy:0.1.0-SNAPSHOT").withNetwork(NETWORK)
 				.withNetworkAliases("proxy")
 				.withExposedPorts(8080)
 				.withEnv("SPRING_AI_OPENAI_BASE_URL", "http://wiremock:8080")

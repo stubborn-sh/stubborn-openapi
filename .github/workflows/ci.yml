@@ -60,13 +60,11 @@ jobs:
         run: ./mvnw io.spring.javaformat:spring-javaformat-maven-plugin:validate -q
 
       - name: Build, test & install (core modules)
-        run: ./mvnw clean install -pl !e2e-tests
+        run: ./mvnw clean verify -pl !e2e-tests
 
       - name: Test JS SDK
         run: cd js && npm run test:ci
 
-      - name: Build Docker image for samples
-        run: ./mvnw spring-boot:build-image -pl broker -DskipTests
 
       - name: Build & test samples
         run: ./mvnw verify -Psamples -pl samples -also-make-dependents
