@@ -88,7 +88,7 @@
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>ci</arguments>
+							<arguments>ci --include=optional</arguments>
 						</configuration>
 					</execution>
 					<execution>
