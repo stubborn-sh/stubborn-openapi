@@ -29,7 +29,7 @@ class PublishContractsTaskTest {
 		Project project = ProjectBuilder.builder().build();
 
 		// when
-		project.getPluginManager().apply("sh.stubborn.oss");
+		project.getPluginManager().apply("sh.stubborn.broker");
 
 		// then
 		assertNotNull(project.getTasks().findByName("publishContracts"));
@@ -41,7 +41,7 @@ class PublishContractsTaskTest {
 		Project project = ProjectBuilder.builder().build();
 
 		// when
-		project.getPluginManager().apply("sh.stubborn.oss");
+		project.getPluginManager().apply("sh.stubborn.broker");
 
 		// then
 		assertNotNull(project.getExtensions().findByName("broker"));
