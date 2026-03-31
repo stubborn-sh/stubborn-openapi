@@ -13,7 +13,7 @@
 
 	<groupId>sh.stubborn</groupId>
 	<artifactId>spring-cloud-contract-openapi-validator</artifactId>
-	<version>0.0.1</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>Stubborn OpenAPI Validator</name>
 	<description>Validates Spring Cloud Contract DSL files against OpenAPI specifications. Use standalone or with Stubborn -- no Stubborn dependency required.</description>
 	<url>https://github.com/stubborn-sh/stubborn-openapi</url>
