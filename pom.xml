@@ -50,7 +50,7 @@
 
 		<!-- Static analysis -->
 		<spring-javaformat.version>0.0.47</spring-javaformat.version>
-		<checkstyle.version>13.3.0</checkstyle.version>
+		<checkstyle.version>13.4.0</checkstyle.version>
 		<checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
 		<error-prone.version>2.48.0</error-prone.version>
 		<spotbugs-maven-plugin.version>4.9.8.2</spotbugs-maven-plugin.version>
