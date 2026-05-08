@@ -110,6 +110,41 @@ public class OpenApiContractsVerifier {
 		return new OpenApiVerificationReport(List.copyOf(violations));
 	}
 
+	/**
+	 * Verifies a collection of already-parsed contracts against an OpenAPI specification
+	 * string. Used by the converter to verify contracts it just produced from the spec
+	 * without re-serializing them to YAML.
+	 * @param openApiSpecContent the OpenAPI specification as a YAML or JSON string
+	 * @param contracts already-parsed contracts to verify
+	 * @return verification report with any violations found
+	 * @since 0.2.0
+	 */
+	public OpenApiVerificationReport verifyInMemory(String openApiSpecContent, Collection<Contract> contracts) {
+		List<OpenApiContractViolation> violations = new ArrayList<>();
+
+		OpenAPI openAPI = parseOpenApiFromString(openApiSpecContent, violations);
+		if (openAPI == null) {
+			return new OpenApiVerificationReport(List.copyOf(violations));
+		}
+
+		OpenApiSpecIndex specIndex = OpenApiSpecIndex.from(openAPI);
+		Path inMemoryPath = Path.of("in-memory");
+		int index = 0;
+		for (Contract contract : contracts) {
+			index++;
+			if (contract.getIgnored() || contract.getInProgress()) {
+				continue;
+			}
+			String name = contract.getName();
+			if (name == null || name.isBlank()) {
+				name = "contract#" + index;
+			}
+			validateContract(specIndex, new ContractSource(inMemoryPath, name, contract), violations);
+		}
+
+		return new OpenApiVerificationReport(List.copyOf(violations));
+	}
+
 	@Nullable private OpenAPI parseOpenApi(Path openApiSpec, List<OpenApiContractViolation> violations) {
 		try {
 			OpenAPI openAPI = new OpenAPIV3Parser().read(openApiSpec.toString());

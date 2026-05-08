@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -79,8 +80,9 @@ public class OpenApiContractConverter implements ContractConverter<Collection<Pa
 
 	@Override
 	public Collection<Contract> convertFrom(File file) {
+		List<Contract> contracts;
 		try {
-			return oa3ToScc.convert(oa3Parser.parseOpenAPI(file))
+			contracts = oa3ToScc.convert(oa3Parser.parseOpenAPI(file))
 				.map(tempYamlToContracts::convertFromYaml)
 				.flatMap(Collection::stream)
 				.toList();
@@ -88,6 +90,21 @@ public class OpenApiContractConverter implements ContractConverter<Collection<Pa
 		catch (Exception e) {
 			log.error("Error converting OpenAPI file {} to contracts", file.getAbsolutePath(), e);
 			return List.of();
+		}
+
+		if (!contracts.isEmpty()) {
+			ConverterDriftCheck.apply(readSpec(file), contracts);
+		}
+		return contracts;
+	}
+
+	private String readSpec(File file) {
+		try {
+			return Files.readString(file.toPath());
+		}
+		catch (IOException e) {
+			throw new IllegalStateException("Failed to read OpenAPI spec for drift check: " + file.getAbsolutePath(),
+					e);
 		}
 	}
 
