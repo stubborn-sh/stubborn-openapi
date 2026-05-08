@@ -16,20 +16,21 @@
 
 package org.springframework.cloud.contract.verifier.converter;
 
-import io.swagger.v3.oas.models.PathItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cloud.contract.spec.Contract;
-import org.springframework.cloud.contract.spec.ContractConverter;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.PathItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.cloud.contract.spec.Contract;
+import org.springframework.cloud.contract.spec.ContractConverter;
 
 public class OpenApiContractConverter implements ContractConverter<Collection<PathItem>> {
 
@@ -80,9 +81,11 @@ public class OpenApiContractConverter implements ContractConverter<Collection<Pa
 
 	@Override
 	public Collection<Contract> convertFrom(File file) {
+		OpenAPI openAPI;
 		List<Contract> contracts;
 		try {
-			contracts = oa3ToScc.convert(oa3Parser.parseOpenAPI(file))
+			openAPI = oa3Parser.parseOpenAPI(file);
+			contracts = oa3ToScc.convert(openAPI)
 				.map(tempYamlToContracts::convertFromYaml)
 				.flatMap(Collection::stream)
 				.toList();
@@ -93,19 +96,9 @@ public class OpenApiContractConverter implements ContractConverter<Collection<Pa
 		}
 
 		if (!contracts.isEmpty()) {
-			ConverterDriftCheck.apply(readSpec(file), contracts);
+			ConverterDriftCheck.apply(openAPI, contracts);
 		}
 		return contracts;
-	}
-
-	private String readSpec(File file) {
-		try {
-			return Files.readString(file.toPath());
-		}
-		catch (IOException e) {
-			throw new IllegalStateException("Failed to read OpenAPI spec for drift check: " + file.getAbsolutePath(),
-					e);
-		}
 	}
 
 	@Override

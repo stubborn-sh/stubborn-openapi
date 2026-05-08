@@ -31,6 +31,11 @@ public class OpenApiContractDriftException extends RuntimeException {
 		this.report = report;
 	}
 
+	public OpenApiContractDriftException(OpenApiVerificationReport report, Throwable cause) {
+		super(report.render(), cause);
+		this.report = report;
+	}
+
 	public OpenApiVerificationReport report() {
 		return this.report;
 	}

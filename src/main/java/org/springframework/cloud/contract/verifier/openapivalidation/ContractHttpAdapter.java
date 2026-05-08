@@ -24,6 +24,7 @@ import org.jspecify.annotations.Nullable;
 
 import org.springframework.cloud.contract.spec.Contract;
 import org.springframework.cloud.contract.spec.internal.Header;
+import org.springframework.cloud.contract.spec.internal.Headers;
 import org.springframework.cloud.contract.spec.internal.QueryParameter;
 import org.springframework.cloud.contract.spec.internal.QueryParameters;
 import org.springframework.cloud.contract.spec.internal.Request;
@@ -37,6 +38,9 @@ import org.springframework.cloud.contract.spec.internal.Url;
  */
 final class ContractHttpAdapter {
 
+	/**
+	 * Jackson {@code ObjectMapper} is thread-safe once configured — no further mutation.
+	 */
 	private static final ObjectMapper JSON = new ObjectMapper();
 
 	private ContractHttpAdapter() {
@@ -50,7 +54,7 @@ final class ContractHttpAdapter {
 			return builder.build();
 		}
 
-		applyRequestHeaders(builder, request);
+		applyHeaders(request.getHeaders(), builder::withContentType, builder::withHeader);
 		applyQueryParameters(builder, request);
 		applyRequestBody(builder, request);
 		return builder.build();
@@ -63,25 +67,27 @@ final class ContractHttpAdapter {
 			return builder.build();
 		}
 
-		applyResponseHeaders(builder, response);
+		applyHeaders(response.getHeaders(), builder::withContentType, builder::withHeader);
 		applyResponseBody(builder, response);
 		return builder.build();
 	}
 
-	private static void applyRequestHeaders(SimpleRequest.Builder builder, Request request) {
-		if (request.getHeaders() == null || request.getHeaders().getEntries() == null) {
+	private static void applyHeaders(@Nullable Headers headers, ContentTypeSink contentTypeSink,
+			HeaderSink headerSink) {
+		if (headers == null || headers.getEntries() == null) {
 			return;
 		}
-		for (Header header : request.getHeaders().getEntries()) {
+		for (Header header : headers.getEntries()) {
 			Object value = DslValueExtractor.unwrap(header);
 			if (value == null) {
 				continue;
 			}
+			String stringValue = value.toString();
 			if ("Content-Type".equalsIgnoreCase(header.getName())) {
-				builder.withContentType(value.toString());
+				contentTypeSink.accept(stringValue);
 			}
 			else {
-				builder.withHeader(header.getName(), value.toString());
+				headerSink.accept(header.getName(), stringValue);
 			}
 		}
 	}
@@ -113,24 +119,6 @@ final class ContractHttpAdapter {
 		}
 	}
 
-	private static void applyResponseHeaders(SimpleResponse.Builder builder, Response response) {
-		if (response.getHeaders() == null || response.getHeaders().getEntries() == null) {
-			return;
-		}
-		for (Header header : response.getHeaders().getEntries()) {
-			Object value = DslValueExtractor.unwrap(header);
-			if (value == null) {
-				continue;
-			}
-			if ("Content-Type".equalsIgnoreCase(header.getName())) {
-				builder.withContentType(value.toString());
-			}
-			else {
-				builder.withHeader(header.getName(), value.toString());
-			}
-		}
-	}
-
 	private static void applyResponseBody(SimpleResponse.Builder builder, Response response) {
 		if (response.getBody() == null) {
 			return;
@@ -154,6 +142,9 @@ final class ContractHttpAdapter {
 		try {
 			return JSON.writeValueAsString(value);
 		}
+		catch (RuntimeException ex) {
+			return value.toString();
+		}
 		catch (Exception ex) {
 			return value.toString();
 		}
@@ -162,6 +153,20 @@ final class ContractHttpAdapter {
 	private static String stripQuery(String path) {
 		int q = path.indexOf('?');
 		return q >= 0 ? path.substring(0, q) : path;
+	}
+
+	@FunctionalInterface
+	private interface ContentTypeSink {
+
+		void accept(String value);
+
+	}
+
+	@FunctionalInterface
+	private interface HeaderSink {
+
+		void accept(String name, String value);
+
 	}
 
 }

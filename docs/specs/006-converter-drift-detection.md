@@ -27,12 +27,25 @@ contracts from an OpenAPI source gets the same drift guarantee.
 
 ## How (High Level)
 
-`OpenApiContractConverter.convertFrom(File)` already parses the OpenAPI spec via
-`Oa3Parser` and converts it into a stream of contract YAML strings, then into
-`Contract` objects. After conversion, the converter runs
-`OpenApiContractsVerifier.verifyInMemory(...)` against the original OpenAPI
-content for every produced contract, collecting violations into a single
-`OpenApiVerificationReport`.
+`OpenApiContractConverter.convertFrom(File)` parses the OpenAPI spec exactly
+once via `Oa3Parser` and converts it into a stream of contract YAML strings,
+then into `Contract` objects. After conversion, the converter passes the
+already-parsed `OpenAPI` model into a dedicated
+`OpenApiContractsVerifier.verifyInMemory(OpenAPI, Collection<Contract>)`
+overload — no second read of the file, no re-parse — and the verifier runs
+both path/method/status drift checks and schema-level drift checks against
+that single model.
+
+### SSRF mitigation
+
+OpenAPI parsing is performed via a hardened `OpenApiSafeParser` utility that
+sets `ParseOptions.setResolve(false)` (plus the related
+`setResolveFully`/`setResolveCombinators`/`setResolveRequestBody`/`setResolveResponses`
+to `false`). A malicious spec containing
+`$ref: 'https://attacker.invalid/x'` cannot make the build JVM open outbound
+connections. Local `#/components/...` references are still resolved by the
+downstream Atlassian validator at validation time — disabling parser-side
+resolution does not break schema-level drift checks.
 
 Verification covers **every drift axis the OpenAPI document can describe**:
 
@@ -93,8 +106,11 @@ System property:
 1. Drift verification runs only when `convertFrom` successfully produced at
    least one contract from the OpenAPI source. If conversion itself failed,
    drift is not checked (the conversion error is the primary failure).
-2. The OpenAPI document used for verification is the same document parsed for
-   conversion — parsed exactly once.
+2. The OpenAPI document used for verification is the same in-memory `OpenAPI`
+   model produced during conversion — parsed exactly once. The converter never
+   re-reads or re-parses the spec file for drift purposes.
+13. Remote `$ref` resolution at parse time is disabled. A spec referencing
+    `https://...` URLs is parsed without those references being followed.
 3. Verification is performed via the existing `OpenApiContractsVerifier`
    in-memory mode; the path/method/status drift rules from
    [001-contract-validation.md](001-contract-validation.md) apply unchanged.
@@ -226,12 +242,20 @@ content type
 **Then** validation passes — the producer (server) value is what the stub
 serves, and it matches the schema
 
+### Remote $ref Refused At Parse Time
+
+**Given** an OpenAPI spec containing `$ref: 'https://attacker.invalid/x'`
+**When** `convertFrom` (or `verifyInMemory(String, ...)`) parses it
+**Then** the parser does not open an outbound HTTP connection — the spec is
+parsed with remote-ref resolution disabled, so the build JVM is not used as
+an SSRF proxy
+
 ## Error Cases
 
 | Scenario | Behaviour |
 |----------|-----------|
 | OpenAPI file unparseable | Existing error path; no drift check |
-| Verifier itself throws | Logged at ERROR; rethrown as `OpenApiContractDriftException` (fail-fast) |
+| Verifier itself throws | Logged at ERROR; **wrapped** and rethrown as `OpenApiContractDriftException` carrying a synthetic single-violation report (fail-fast). The original cause is preserved as the exception's cause. |
 | Drift detected, mode=fail | `OpenApiContractDriftException` with full report |
 | Drift detected, mode=warn | WARN log, contracts returned |
 

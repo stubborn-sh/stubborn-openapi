@@ -18,14 +18,23 @@ package org.springframework.cloud.contract.verifier.converter;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.OpenAPIV3Parser;
+import io.swagger.v3.parser.core.models.ParseOptions;
+import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
 import java.io.File;
 
 class Oa3Parser {
 
 	OpenAPI parseOpenAPI(File file) {
-		var spec = new OpenAPIV3Parser().read(file.getPath());
-		if (spec == null || spec.getPaths().isEmpty()) {
+		ParseOptions options = new ParseOptions();
+		options.setResolve(false);
+		options.setResolveFully(false);
+		options.setResolveCombinators(false);
+		options.setResolveRequestBody(false);
+		options.setResolveResponses(false);
+		SwaggerParseResult result = new OpenAPIV3Parser().readLocation(file.getPath(), null, options);
+		OpenAPI spec = (result != null) ? result.getOpenAPI() : null;
+		if (spec == null || spec.getPaths() == null || spec.getPaths().isEmpty()) {
 			throw new IllegalArgumentException("OpenAPI specification %s not found".formatted(file.getPath()));
 		}
 		return spec;

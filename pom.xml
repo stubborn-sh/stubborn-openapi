@@ -49,6 +49,9 @@
 		<swagger-parser.version>2.1.39</swagger-parser.version>
 		<swagger-request-validator.version>2.44.9</swagger-request-validator.version>
 
+		<!-- Override stale transitive deps -->
+		<rhino.version>1.7.15</rhino.version>
+
 		<!-- Static analysis -->
 		<spring-javaformat.version>0.0.47</spring-javaformat.version>
 		<checkstyle.version>13.3.0</checkstyle.version>
@@ -87,6 +90,13 @@
 				<groupId>org.jspecify</groupId>
 				<artifactId>jspecify</artifactId>
 				<version>${jspecify.version}</version>
+			</dependency>
+			<!-- Override Rhino pulled by json-schema-validator (transitive of
+			     swagger-request-validator). 1.7.7.2 has known CVEs. -->
+			<dependency>
+				<groupId>org.mozilla</groupId>
+				<artifactId>rhino</artifactId>
+				<version>${rhino.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

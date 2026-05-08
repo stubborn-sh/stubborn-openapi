@@ -17,6 +17,7 @@ package org.springframework.cloud.contract.verifier.openapivalidation;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.model.SimpleRequest;
@@ -26,6 +27,8 @@ import com.atlassian.oai.validator.report.ValidationReport.Level;
 import com.atlassian.oai.validator.report.ValidationReport.Message;
 import io.swagger.v3.oas.models.OpenAPI;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.cloud.contract.spec.Contract;
 
@@ -35,6 +38,14 @@ import org.springframework.cloud.contract.spec.Contract;
  * Atlassian {@code swagger-request-validator}.
  */
 final class SchemaDriftValidator {
+
+	private static final Logger log = LoggerFactory.getLogger(SchemaDriftValidator.class);
+
+	/**
+	 * Detects regex-shaped path segments — Business Rule 11 says we must not type-check
+	 * path parameter values when they are regex matchers.
+	 */
+	private static final Pattern REGEX_PATH_HINT = Pattern.compile(".*[\\[\\\\(].*");
 
 	@Nullable private final OpenApiInteractionValidator validator;
 
@@ -52,16 +63,33 @@ final class SchemaDriftValidator {
 			SimpleResponse resp = ContractHttpAdapter.toResponse(contract, status);
 			ValidationReport report = this.validator.validate(req, resp);
 			for (Message msg : report.getMessages()) {
-				if (msg.getLevel() == Level.ERROR) {
-					violations.add(new OpenApiContractViolation(sourcePath, contractName,
-							"Schema drift: " + msg.getMessage()));
+				if (msg.getLevel() != Level.ERROR) {
+					continue;
 				}
+				if (isPathParamTypeMismatchOnRegex(path, msg)) {
+					// Spec rule 11: regex-matcher path params are not type-checked.
+					continue;
+				}
+				violations
+					.add(new OpenApiContractViolation(sourcePath, contractName, "Schema drift: " + msg.getMessage()));
 			}
 		}
 		catch (RuntimeException ex) {
+			log.warn("Schema drift validation failed for {}", contractName, ex);
 			violations.add(new OpenApiContractViolation(sourcePath, contractName,
 					"Schema drift validation failed: " + ex.getMessage()));
 		}
+	}
+
+	private static boolean isPathParamTypeMismatchOnRegex(String path, Message msg) {
+		if (!REGEX_PATH_HINT.matcher(path).matches()) {
+			return false;
+		}
+		String text = msg.getMessage();
+		String key = msg.getKey();
+		boolean looksLikeTypeMismatch = (text != null && text.toLowerCase().contains("does not match"))
+				|| (key != null && key.contains("type"));
+		return looksLikeTypeMismatch;
 	}
 
 }

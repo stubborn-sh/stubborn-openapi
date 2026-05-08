@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Locale;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.parser.OpenAPIV3Parser;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.cloud.contract.spec.Contract;
@@ -128,7 +127,27 @@ public class OpenApiContractsVerifier {
 		if (openAPI == null) {
 			return new OpenApiVerificationReport(List.copyOf(violations));
 		}
+		runValidation(openAPI, contracts, violations);
+		return new OpenApiVerificationReport(List.copyOf(violations));
+	}
 
+	/**
+	 * Verifies a collection of already-parsed contracts against an already-parsed OpenAPI
+	 * model. Avoids re-parsing the spec when the caller (e.g., the converter) already has
+	 * the {@link OpenAPI} object in hand.
+	 * @param openAPI the parsed OpenAPI model
+	 * @param contracts already-parsed contracts to verify
+	 * @return verification report with any violations found
+	 * @since 0.2.0
+	 */
+	public OpenApiVerificationReport verifyInMemory(OpenAPI openAPI, Collection<Contract> contracts) {
+		List<OpenApiContractViolation> violations = new ArrayList<>();
+		runValidation(openAPI, contracts, violations);
+		return new OpenApiVerificationReport(List.copyOf(violations));
+	}
+
+	private void runValidation(OpenAPI openAPI, Collection<Contract> contracts,
+			List<OpenApiContractViolation> violations) {
 		OpenApiSpecIndex specIndex = OpenApiSpecIndex.from(openAPI);
 		SchemaDriftValidator schemaValidator = new SchemaDriftValidator(openAPI);
 		Path inMemoryPath = Path.of("in-memory");
@@ -144,13 +163,11 @@ public class OpenApiContractsVerifier {
 			}
 			validateContract(specIndex, schemaValidator, new ContractSource(inMemoryPath, name, contract), violations);
 		}
-
-		return new OpenApiVerificationReport(List.copyOf(violations));
 	}
 
 	@Nullable private OpenAPI parseOpenApi(Path openApiSpec, List<OpenApiContractViolation> violations) {
 		try {
-			OpenAPI openAPI = new OpenAPIV3Parser().read(openApiSpec.toString());
+			OpenAPI openAPI = OpenApiSafeParser.parsePath(openApiSpec.toString());
 			if (openAPI == null || openAPI.getPaths() == null || openAPI.getPaths().isEmpty()) {
 				violations.add(new OpenApiContractViolation(openApiSpec, "OpenAPI",
 						"OpenAPI specification contains no paths"));
@@ -167,7 +184,7 @@ public class OpenApiContractsVerifier {
 
 	@Nullable private OpenAPI parseOpenApiFromString(String content, List<OpenApiContractViolation> violations) {
 		try {
-			OpenAPI openAPI = new OpenAPIV3Parser().readContents(content).getOpenAPI();
+			OpenAPI openAPI = OpenApiSafeParser.parseContents(content);
 			if (openAPI == null || openAPI.getPaths() == null || openAPI.getPaths().isEmpty()) {
 				violations.add(new OpenApiContractViolation(Path.of("in-memory"), "OpenAPI",
 						"OpenAPI specification contains no paths"));
