@@ -167,8 +167,22 @@ public class OpenApiContractsVerifier {
 
 	@Nullable private OpenAPI parseOpenApi(Path openApiSpec, List<OpenApiContractViolation> violations) {
 		try {
-			OpenAPI openAPI = OpenApiSafeParser.parsePath(openApiSpec.toString());
-			if (openAPI == null || openAPI.getPaths() == null || openAPI.getPaths().isEmpty()) {
+			OpenApiSafeParser.Result result = OpenApiSafeParser.parsePath(openApiSpec.toString());
+			OpenAPI openAPI = result.openAPI();
+			if (openAPI == null) {
+				if (result.messages().isEmpty()) {
+					violations.add(new OpenApiContractViolation(openApiSpec, "OpenAPI",
+							"Failed to parse OpenAPI specification"));
+				}
+				else {
+					for (String msg : result.messages()) {
+						violations
+							.add(new OpenApiContractViolation(openApiSpec, "OpenAPI", "OpenAPI parse error: " + msg));
+					}
+				}
+				return null;
+			}
+			if (openAPI.getPaths() == null || openAPI.getPaths().isEmpty()) {
 				violations.add(new OpenApiContractViolation(openApiSpec, "OpenAPI",
 						"OpenAPI specification contains no paths"));
 				return null;
@@ -184,10 +198,25 @@ public class OpenApiContractsVerifier {
 
 	@Nullable private OpenAPI parseOpenApiFromString(String content, List<OpenApiContractViolation> violations) {
 		try {
-			OpenAPI openAPI = OpenApiSafeParser.parseContents(content);
-			if (openAPI == null || openAPI.getPaths() == null || openAPI.getPaths().isEmpty()) {
-				violations.add(new OpenApiContractViolation(Path.of("in-memory"), "OpenAPI",
-						"OpenAPI specification contains no paths"));
+			OpenApiSafeParser.Result result = OpenApiSafeParser.parseContents(content);
+			OpenAPI openAPI = result.openAPI();
+			Path inMemory = Path.of("in-memory");
+			if (openAPI == null) {
+				if (result.messages().isEmpty()) {
+					violations.add(
+							new OpenApiContractViolation(inMemory, "OpenAPI", "Failed to parse OpenAPI specification"));
+				}
+				else {
+					for (String msg : result.messages()) {
+						violations
+							.add(new OpenApiContractViolation(inMemory, "OpenAPI", "OpenAPI parse error: " + msg));
+					}
+				}
+				return null;
+			}
+			if (openAPI.getPaths() == null || openAPI.getPaths().isEmpty()) {
+				violations
+					.add(new OpenApiContractViolation(inMemory, "OpenAPI", "OpenAPI specification contains no paths"));
 				return null;
 			}
 			return openAPI;

@@ -124,7 +124,10 @@ System property:
     body as required.
 11. Path parameter values inside the contract URL are not type-checked against
     `parameters[in=path].schema` when the value is a regex matcher (the regex
-    is the type contract). Concrete literal values are type-checked.
+    is the type contract). Concrete literal values are type-checked. The
+    suppression only applies to messages whose `MessageContext.getParameter()`
+    is `in: path` — query-parameter, header-parameter, body, and content-type
+    violations are *never* suppressed by this rule.
 12. Two-sided `DslProperty` values (`value(producer(...), consumer(...))`) are
     validated using the **server** value — that is what the stub will emit.
 4. In `warn` mode, drift never prevents contracts from being returned.
@@ -254,7 +257,7 @@ an SSRF proxy
 
 | Scenario | Behaviour |
 |----------|-----------|
-| OpenAPI file unparseable | Existing error path; no drift check |
+| OpenAPI file unparseable | Parse-error messages from the parser are surfaced as violations (rather than silently dropped); the misleading "no paths" violation only appears when the file is genuinely empty of paths. |
 | Verifier itself throws | Logged at ERROR; **wrapped** and rethrown as `OpenApiContractDriftException` carrying a synthetic single-violation report (fail-fast). The original cause is preserved as the exception's cause. |
 | Drift detected, mode=fail | `OpenApiContractDriftException` with full report |
 | Drift detected, mode=warn | WARN log, contracts returned |

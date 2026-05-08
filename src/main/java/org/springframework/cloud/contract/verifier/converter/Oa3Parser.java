@@ -16,12 +16,12 @@
 
 package org.springframework.cloud.contract.verifier.converter;
 
+import java.io.File;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.ParseOptions;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
-
-import java.io.File;
 
 class Oa3Parser {
 
@@ -34,8 +34,14 @@ class Oa3Parser {
 		options.setResolveResponses(false);
 		SwaggerParseResult result = new OpenAPIV3Parser().readLocation(file.getPath(), null, options);
 		OpenAPI spec = (result != null) ? result.getOpenAPI() : null;
-		if (spec == null || spec.getPaths() == null || spec.getPaths().isEmpty()) {
-			throw new IllegalArgumentException("OpenAPI specification %s not found".formatted(file.getPath()));
+		if (spec == null) {
+			String details = (result != null && result.getMessages() != null && !result.getMessages().isEmpty())
+					? " — " + String.join("; ", result.getMessages()) : "";
+			throw new IllegalArgumentException(
+					"OpenAPI specification %s could not be parsed%s".formatted(file.getPath(), details));
+		}
+		if (spec.getPaths() == null || spec.getPaths().isEmpty()) {
+			throw new IllegalArgumentException("OpenAPI specification %s contains no paths".formatted(file.getPath()));
 		}
 		return spec;
 	}

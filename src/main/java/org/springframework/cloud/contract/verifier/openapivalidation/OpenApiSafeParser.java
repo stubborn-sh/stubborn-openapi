@@ -15,6 +15,8 @@
  */
 package org.springframework.cloud.contract.verifier.openapivalidation;
 
+import java.util.List;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.ParseOptions;
@@ -27,6 +29,11 @@ import org.jspecify.annotations.Nullable;
  * build JVM open outbound connections. Local {@code #/components} references are still
  * consumed by the Atlassian validator at validation time, so disabling parser-side
  * resolution does not affect schema-level drift checks.
+ *
+ * <p>
+ * Parse-error messages from {@link SwaggerParseResult#getMessages()} are surfaced via
+ * {@link Result#messages()} so callers can present them as violations rather than
+ * silently dropping them and reporting a misleading "no paths" error.
  */
 final class OpenApiSafeParser {
 
@@ -44,14 +51,25 @@ final class OpenApiSafeParser {
 		return options;
 	}
 
-	@Nullable static OpenAPI parsePath(String path) {
+	static Result parsePath(String path) {
 		SwaggerParseResult result = new OpenAPIV3Parser().readLocation(path, null, safeOptions());
-		return result != null ? result.getOpenAPI() : null;
+		return adapt(result);
 	}
 
-	@Nullable static OpenAPI parseContents(String content) {
+	static Result parseContents(String content) {
 		SwaggerParseResult result = new OpenAPIV3Parser().readContents(content, null, safeOptions());
-		return result != null ? result.getOpenAPI() : null;
+		return adapt(result);
+	}
+
+	private static Result adapt(@Nullable SwaggerParseResult result) {
+		if (result == null) {
+			return new Result(null, List.of());
+		}
+		List<String> messages = result.getMessages() != null ? List.copyOf(result.getMessages()) : List.of();
+		return new Result(result.getOpenAPI(), messages);
+	}
+
+	record Result(@Nullable OpenAPI openAPI, List<String> messages) {
 	}
 
 }

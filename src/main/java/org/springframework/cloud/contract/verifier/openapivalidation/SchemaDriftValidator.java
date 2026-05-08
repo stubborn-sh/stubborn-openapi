@@ -26,6 +26,7 @@ import com.atlassian.oai.validator.report.ValidationReport;
 import com.atlassian.oai.validator.report.ValidationReport.Level;
 import com.atlassian.oai.validator.report.ValidationReport.Message;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,10 @@ final class SchemaDriftValidator {
 	private static final Logger log = LoggerFactory.getLogger(SchemaDriftValidator.class);
 
 	/**
-	 * Detects regex-shaped path segments — Business Rule 11 says we must not type-check
-	 * path parameter values when they are regex matchers.
+	 * A path containing {@code [}, {@code (}, or a backslash is treated as carrying a
+	 * regex matcher per spec rule 11. Suppression then only applies to messages whose
+	 * {@code MessageContext.getParameter().in == "path"} — never to query / header / body
+	 * / content-type messages, even on the same path.
 	 */
 	private static final Pattern REGEX_PATH_HINT = Pattern.compile(".*[\\[\\\\(].*");
 
@@ -62,12 +65,15 @@ final class SchemaDriftValidator {
 			SimpleRequest req = ContractHttpAdapter.toRequest(contract, method, path);
 			SimpleResponse resp = ContractHttpAdapter.toResponse(contract, status);
 			ValidationReport report = this.validator.validate(req, resp);
+			boolean pathLooksLikeRegex = REGEX_PATH_HINT.matcher(path).matches();
 			for (Message msg : report.getMessages()) {
 				if (msg.getLevel() != Level.ERROR) {
 					continue;
 				}
-				if (isPathParamTypeMismatchOnRegex(path, msg)) {
-					// Spec rule 11: regex-matcher path params are not type-checked.
+				if (pathLooksLikeRegex && isPathParameterValidation(msg)) {
+					// Spec rule 11: regex-matcher path-param values are not type-checked.
+					// Narrow suppression — query/header/body/content-type errors on the
+					// same path are still reported.
 					continue;
 				}
 				violations
@@ -81,15 +87,12 @@ final class SchemaDriftValidator {
 		}
 	}
 
-	private static boolean isPathParamTypeMismatchOnRegex(String path, Message msg) {
-		if (!REGEX_PATH_HINT.matcher(path).matches()) {
-			return false;
-		}
-		String text = msg.getMessage();
-		String key = msg.getKey();
-		boolean looksLikeTypeMismatch = (text != null && text.toLowerCase().contains("does not match"))
-				|| (key != null && key.contains("type"));
-		return looksLikeTypeMismatch;
+	private static boolean isPathParameterValidation(Message msg) {
+		return msg.getContext()
+			.flatMap(ctx -> ctx.getParameter())
+			.map(Parameter::getIn)
+			.map(in -> "path".equalsIgnoreCase(in))
+			.orElse(false);
 	}
 
 }
