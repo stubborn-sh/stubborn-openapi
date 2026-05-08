@@ -124,6 +124,19 @@ class OpenApiSafeParserSilentFailureTest {
 	 * must not be silently dropped.
 	 */
 	@Test
+	void should_expose_safeOptions_publicly_for_cross_package_reuse() {
+		// Both Oa3Parser (converter package) and OpenApiSafeParser (openapivalidation
+		// package) need the same parse options; safeOptions() must be public so the
+		// converter can reuse it without duplicating the SSRF-mitigation flags.
+		var options = OpenApiSafeParser.safeOptions();
+		assertThat(options.isResolve()).isFalse();
+		assertThat(options.isResolveFully()).isFalse();
+		assertThat(options.isResolveCombinators()).isFalse();
+		assertThat(options.isResolveRequestBody()).isFalse();
+		assertThat(options.isResolveResponses()).isFalse();
+	}
+
+	@Test
 	void should_surface_parse_messages_when_spec_is_malformed_yaml() {
 		String malformed = "openapi: 3.0.1\ninfo: { title: t, version: '1'\npaths: {{:";
 

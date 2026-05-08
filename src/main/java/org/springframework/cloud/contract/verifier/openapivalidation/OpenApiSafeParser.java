@@ -35,13 +35,13 @@ import org.jspecify.annotations.Nullable;
  * {@link Result#messages()} so callers can present them as violations rather than
  * silently dropping them and reporting a misleading "no paths" error.
  */
-final class OpenApiSafeParser {
+public final class OpenApiSafeParser {
 
 	private OpenApiSafeParser() {
 		throw new AssertionError("Utility class");
 	}
 
-	static ParseOptions safeOptions() {
+	public static ParseOptions safeOptions() {
 		ParseOptions options = new ParseOptions();
 		options.setResolve(false);
 		options.setResolveFully(false);
@@ -51,12 +51,12 @@ final class OpenApiSafeParser {
 		return options;
 	}
 
-	static Result parsePath(String path) {
+	public static Result parsePath(String path) {
 		SwaggerParseResult result = new OpenAPIV3Parser().readLocation(path, null, safeOptions());
 		return adapt(result);
 	}
 
-	static Result parseContents(String content) {
+	public static Result parseContents(String content) {
 		SwaggerParseResult result = new OpenAPIV3Parser().readContents(content, null, safeOptions());
 		return adapt(result);
 	}
@@ -69,7 +69,7 @@ final class OpenApiSafeParser {
 		return new Result(result.getOpenAPI(), messages);
 	}
 
-	record Result(@Nullable OpenAPI openAPI, List<String> messages) {
+	public record Result(@Nullable OpenAPI openAPI, List<String> messages) {
 	}
 
 }

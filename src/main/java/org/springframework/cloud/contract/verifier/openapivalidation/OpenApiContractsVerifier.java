@@ -24,6 +24,8 @@ import java.util.Locale;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.springframework.cloud.contract.spec.Contract;
 import org.springframework.cloud.contract.spec.ContractConverter;
@@ -38,6 +40,8 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * @since 5.0.2
  */
 public class OpenApiContractsVerifier {
+
+	private static final Logger log = LoggerFactory.getLogger(OpenApiContractsVerifier.class);
 
 	/**
 	 * Verifies contracts from a directory against an OpenAPI specification.
@@ -167,27 +171,7 @@ public class OpenApiContractsVerifier {
 
 	@Nullable private OpenAPI parseOpenApi(Path openApiSpec, List<OpenApiContractViolation> violations) {
 		try {
-			OpenApiSafeParser.Result result = OpenApiSafeParser.parsePath(openApiSpec.toString());
-			OpenAPI openAPI = result.openAPI();
-			if (openAPI == null) {
-				if (result.messages().isEmpty()) {
-					violations.add(new OpenApiContractViolation(openApiSpec, "OpenAPI",
-							"Failed to parse OpenAPI specification"));
-				}
-				else {
-					for (String msg : result.messages()) {
-						violations
-							.add(new OpenApiContractViolation(openApiSpec, "OpenAPI", "OpenAPI parse error: " + msg));
-					}
-				}
-				return null;
-			}
-			if (openAPI.getPaths() == null || openAPI.getPaths().isEmpty()) {
-				violations.add(new OpenApiContractViolation(openApiSpec, "OpenAPI",
-						"OpenAPI specification contains no paths"));
-				return null;
-			}
-			return openAPI;
+			return validateParseResult(OpenApiSafeParser.parsePath(openApiSpec.toString()), openApiSpec, violations);
 		}
 		catch (Exception ex) {
 			violations.add(new OpenApiContractViolation(openApiSpec, "OpenAPI",
@@ -197,35 +181,42 @@ public class OpenApiContractsVerifier {
 	}
 
 	@Nullable private OpenAPI parseOpenApiFromString(String content, List<OpenApiContractViolation> violations) {
+		Path inMemory = Path.of("in-memory");
 		try {
-			OpenApiSafeParser.Result result = OpenApiSafeParser.parseContents(content);
-			OpenAPI openAPI = result.openAPI();
-			Path inMemory = Path.of("in-memory");
-			if (openAPI == null) {
-				if (result.messages().isEmpty()) {
-					violations.add(
-							new OpenApiContractViolation(inMemory, "OpenAPI", "Failed to parse OpenAPI specification"));
-				}
-				else {
-					for (String msg : result.messages()) {
-						violations
-							.add(new OpenApiContractViolation(inMemory, "OpenAPI", "OpenAPI parse error: " + msg));
-					}
-				}
-				return null;
-			}
-			if (openAPI.getPaths() == null || openAPI.getPaths().isEmpty()) {
-				violations
-					.add(new OpenApiContractViolation(inMemory, "OpenAPI", "OpenAPI specification contains no paths"));
-				return null;
-			}
-			return openAPI;
+			return validateParseResult(OpenApiSafeParser.parseContents(content), inMemory, violations);
 		}
 		catch (Exception ex) {
-			violations.add(new OpenApiContractViolation(Path.of("in-memory"), "OpenAPI",
+			violations.add(new OpenApiContractViolation(inMemory, "OpenAPI",
 					"Failed to parse OpenAPI specification: " + ex.getMessage()));
 			return null;
 		}
+	}
+
+	@Nullable private OpenAPI validateParseResult(OpenApiSafeParser.Result result, Path source,
+			List<OpenApiContractViolation> violations) {
+		OpenAPI openAPI = result.openAPI();
+		if (openAPI == null) {
+			if (result.messages().isEmpty()) {
+				violations
+					.add(new OpenApiContractViolation(source, "OpenAPI", "Failed to parse OpenAPI specification"));
+			}
+			else {
+				for (String msg : result.messages()) {
+					violations.add(new OpenApiContractViolation(source, "OpenAPI", "OpenAPI parse error: " + msg));
+				}
+			}
+			return null;
+		}
+		// When the model is usable, surface any parser warnings via logs (not as
+		// violations) so operators see them without breaking otherwise-valid pipelines.
+		for (String msg : result.messages()) {
+			log.warn("OpenAPI parse warning ({}): {}", source, msg);
+		}
+		if (openAPI.getPaths() == null || openAPI.getPaths().isEmpty()) {
+			violations.add(new OpenApiContractViolation(source, "OpenAPI", "OpenAPI specification contains no paths"));
+			return null;
+		}
+		return openAPI;
 	}
 
 	private List<Contract> parseContractYaml(String contractYaml, List<OpenApiContractViolation> violations) {

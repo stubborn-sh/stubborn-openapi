@@ -258,6 +258,7 @@ an SSRF proxy
 | Scenario | Behaviour |
 |----------|-----------|
 | OpenAPI file unparseable | Parse-error messages from the parser are surfaced as violations (rather than silently dropped); the misleading "no paths" violation only appears when the file is genuinely empty of paths. |
+| Parser produces warnings AND a usable OpenAPI model | Warnings are logged at WARN level (not raised as violations) so they are visible to the operator without breaking otherwise-valid pipelines. They are not silently discarded just because the model is non-null. |
 | Verifier itself throws | Logged at ERROR; **wrapped** and rethrown as `OpenApiContractDriftException` carrying a synthetic single-violation report (fail-fast). The original cause is preserved as the exception's cause. |
 | Drift detected, mode=fail | `OpenApiContractDriftException` with full report |
 | Drift detected, mode=warn | WARN log, contracts returned |

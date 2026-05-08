@@ -19,24 +19,16 @@ package org.springframework.cloud.contract.verifier.converter;
 import java.io.File;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.parser.OpenAPIV3Parser;
-import io.swagger.v3.parser.core.models.ParseOptions;
-import io.swagger.v3.parser.core.models.SwaggerParseResult;
+
+import org.springframework.cloud.contract.verifier.openapivalidation.OpenApiSafeParser;
 
 class Oa3Parser {
 
 	OpenAPI parseOpenAPI(File file) {
-		ParseOptions options = new ParseOptions();
-		options.setResolve(false);
-		options.setResolveFully(false);
-		options.setResolveCombinators(false);
-		options.setResolveRequestBody(false);
-		options.setResolveResponses(false);
-		SwaggerParseResult result = new OpenAPIV3Parser().readLocation(file.getPath(), null, options);
-		OpenAPI spec = (result != null) ? result.getOpenAPI() : null;
+		OpenApiSafeParser.Result result = OpenApiSafeParser.parsePath(file.getPath());
+		OpenAPI spec = result.openAPI();
 		if (spec == null) {
-			String details = (result != null && result.getMessages() != null && !result.getMessages().isEmpty())
-					? " — " + String.join("; ", result.getMessages()) : "";
+			String details = !result.messages().isEmpty() ? " — " + String.join("; ", result.messages()) : "";
 			throw new IllegalArgumentException(
 					"OpenAPI specification %s could not be parsed%s".formatted(file.getPath(), details));
 		}
