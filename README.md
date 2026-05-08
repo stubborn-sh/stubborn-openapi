@@ -6,10 +6,11 @@ Validates [Spring Cloud Contract](https://spring.io/projects/spring-cloud-contra
 
 ## Features
 
-- Validate SCC contracts (YAML, Groovy, Java) against an OpenAPI spec
-- Convert OpenAPI 3.x specs to SCC contract DSL
+- Validate SCC contracts (YAML, Groovy, Java) against an OpenAPI spec — paths, methods, statuses, **bodies (JSON Schema), headers, query/path params, content types**
+- Convert OpenAPI 3.x specs to SCC contract DSL with **inline drift detection** — every contract produced is verified against the spec it came from
+- Hardened OpenAPI parsing — remote `$ref` resolution disabled (no SSRF surface)
 - JUnit 5 extension for automated validation in tests
-- Detect missing endpoints, invalid status codes, schema mismatches
+- Drift behaviour configurable via `-Dscc.oa3.converter.drift=fail|warn|off` (default `fail`)
 
 ## Usage
 

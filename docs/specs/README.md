@@ -7,6 +7,7 @@
 | 3 | JUnit 5 Extension | [003-junit5-extension.md](003-junit5-extension.md) | Done |
 | 4 | Multi-Format Support | [004-multi-format-support.md](004-multi-format-support.md) | Done |
 | 5 | CLI Validation | [005-cli-validation.md](005-cli-validation.md) | Done |
+| 6 | Inline Drift Detection in Converter | [006-converter-drift-detection.md](006-converter-drift-detection.md) | Done |
 
 ## Spec Template
 
