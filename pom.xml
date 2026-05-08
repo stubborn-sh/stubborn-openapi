@@ -47,6 +47,7 @@
 
 		<!-- Swagger / OpenAPI parser -->
 		<swagger-parser.version>2.1.39</swagger-parser.version>
+		<swagger-request-validator.version>2.44.9</swagger-request-validator.version>
 
 		<!-- Static analysis -->
 		<spring-javaformat.version>0.0.47</spring-javaformat.version>
@@ -106,6 +107,14 @@
 			<groupId>io.swagger.parser.v3</groupId>
 			<artifactId>swagger-parser</artifactId>
 			<version>${swagger-parser.version}</version>
+		</dependency>
+
+		<!-- Schema-level drift detection: validates synthetic HTTP requests/responses
+		     against the OpenAPI document (bodies, headers, params, content types). -->
+		<dependency>
+			<groupId>com.atlassian.oai</groupId>
+			<artifactId>swagger-request-validator-core</artifactId>
+			<version>${swagger-request-validator.version}</version>
 		</dependency>
 
 		<!-- Null safety -->

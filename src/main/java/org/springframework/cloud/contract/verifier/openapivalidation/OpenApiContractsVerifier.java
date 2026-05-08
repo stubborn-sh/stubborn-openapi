@@ -64,13 +64,14 @@ public class OpenApiContractsVerifier {
 		}
 
 		OpenApiSpecIndex specIndex = OpenApiSpecIndex.from(openAPI);
+		SchemaDriftValidator schemaValidator = new SchemaDriftValidator(openAPI);
 		List<ContractSource> contracts = new ContractLoader().load(contractsDir, violations);
 		for (ContractSource contractSource : contracts) {
 			Contract contract = contractSource.contract();
 			if (contract.getIgnored() || contract.getInProgress()) {
 				continue;
 			}
-			validateContract(specIndex, contractSource, violations);
+			validateContract(specIndex, schemaValidator, contractSource, violations);
 		}
 
 		return new OpenApiVerificationReport(List.copyOf(violations));
@@ -93,6 +94,7 @@ public class OpenApiContractsVerifier {
 		}
 
 		OpenApiSpecIndex specIndex = OpenApiSpecIndex.from(openAPI);
+		SchemaDriftValidator schemaValidator = new SchemaDriftValidator(openAPI);
 		List<Contract> contracts = parseContractYaml(contractYaml, violations);
 		Path inMemoryPath = Path.of("in-memory");
 		for (int i = 0; i < contracts.size(); i++) {
@@ -104,7 +106,7 @@ public class OpenApiContractsVerifier {
 			if (name == null || name.isBlank()) {
 				name = "contract#" + (i + 1);
 			}
-			validateContract(specIndex, new ContractSource(inMemoryPath, name, contract), violations);
+			validateContract(specIndex, schemaValidator, new ContractSource(inMemoryPath, name, contract), violations);
 		}
 
 		return new OpenApiVerificationReport(List.copyOf(violations));
@@ -128,6 +130,7 @@ public class OpenApiContractsVerifier {
 		}
 
 		OpenApiSpecIndex specIndex = OpenApiSpecIndex.from(openAPI);
+		SchemaDriftValidator schemaValidator = new SchemaDriftValidator(openAPI);
 		Path inMemoryPath = Path.of("in-memory");
 		int index = 0;
 		for (Contract contract : contracts) {
@@ -139,7 +142,7 @@ public class OpenApiContractsVerifier {
 			if (name == null || name.isBlank()) {
 				name = "contract#" + index;
 			}
-			validateContract(specIndex, new ContractSource(inMemoryPath, name, contract), violations);
+			validateContract(specIndex, schemaValidator, new ContractSource(inMemoryPath, name, contract), violations);
 		}
 
 		return new OpenApiVerificationReport(List.copyOf(violations));
@@ -199,8 +202,8 @@ public class OpenApiContractsVerifier {
 		}
 	}
 
-	private void validateContract(OpenApiSpecIndex specIndex, ContractSource contractSource,
-			List<OpenApiContractViolation> violations) {
+	private void validateContract(OpenApiSpecIndex specIndex, SchemaDriftValidator schemaValidator,
+			ContractSource contractSource, List<OpenApiContractViolation> violations) {
 		Contract contract = contractSource.contract();
 		@Nullable String method = ContractDetails.method(contract);
 		@Nullable String path = ContractDetails.path(contract);
@@ -233,7 +236,11 @@ public class OpenApiContractsVerifier {
 		if (!responseExists) {
 			violations.add(new OpenApiContractViolation(contractSource.path(), contractSource.name(),
 					"No OpenAPI response status " + statusCode + " for contract request " + requestSignature));
+			return;
 		}
+
+		schemaValidator.validate(contract, method, path, status, contractSource.path(), contractSource.name(),
+				violations);
 	}
 
 	private record ContractSource(Path path, String name, Contract contract) {

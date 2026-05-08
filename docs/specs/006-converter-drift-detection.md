@@ -34,6 +34,28 @@ contracts from an OpenAPI source gets the same drift guarantee.
 content for every produced contract, collecting violations into a single
 `OpenApiVerificationReport`.
 
+Verification covers **every drift axis the OpenAPI document can describe**:
+
+| Axis | What is checked |
+|------|------------------|
+| Path | Contract URL matches an OpenAPI path template (segment-by-segment). |
+| Method | OpenAPI operation exists for that path + method. |
+| Response status | OpenAPI declares the contract's response status (incl. `2XX` / `default`). |
+| Request body schema | Contract request body validates against `requestBody.content[*].schema`, with `$ref` resolution. |
+| Response body schema | Contract response body validates against `responses[status].content[*].schema`. |
+| Request `Content-Type` | Contract `Content-Type` header is one of the spec's declared `requestBody.content` media types. |
+| Response `Content-Type` | Contract response `Content-Type` is one of `responses[status].content` media types. |
+| Required request headers | Every required header in the spec's `parameters[in=header]` is present on the contract. |
+| Required response headers | Every required header in `responses[status].headers` is present on the contract response. |
+| Query parameters | Every required query parameter is present; types match the schema (string/integer/etc.). |
+| Path parameters | Path parameter types match the spec's `parameters[in=path]` schema. |
+
+The deeper checks (everything below "response status" in the table) are
+performed via the Atlassian `swagger-request-validator-core` library, which
+adapts each `Contract` into a synthetic HTTP request/response and validates
+both against the OpenAPI document. Path/method/status checks remain in the
+existing `OpenApiContractsVerifier` code path.
+
 Behaviour on drift is controlled by the system property
 `scc.oa3.converter.drift` (default `fail`):
 
@@ -76,6 +98,19 @@ System property:
 3. Verification is performed via the existing `OpenApiContractsVerifier`
    in-memory mode; the path/method/status drift rules from
    [001-contract-validation.md](001-contract-validation.md) apply unchanged.
+   In addition, schema-level checks (bodies, headers, query/path params,
+   content types) run against the same OpenAPI document.
+9. Schema-level checks are skipped for a contract that already failed the
+   path/method/status checks — there is no operation in the spec to validate
+   against, so reporting schema noise on top would be misleading.
+10. Contracts that have no request/response body do not trigger body-schema
+    violations even if the spec declares a schema, unless the spec marks the
+    body as required.
+11. Path parameter values inside the contract URL are not type-checked against
+    `parameters[in=path].schema` when the value is a regex matcher (the regex
+    is the type contract). Concrete literal values are type-checked.
+12. Two-sided `DslProperty` values (`value(producer(...), consumer(...))`) are
+    validated using the **server** value — that is what the stub will emit.
 4. In `warn` mode, drift never prevents contracts from being returned.
 5. In `fail` mode, drift suppresses the contract collection entirely; the
    `OpenApiContractDriftException` carries the full report.
@@ -127,6 +162,70 @@ logged) and no drift verification or `OpenApiContractDriftException` is raised
 **When** `convertFrom` runs against drifted output
 **Then** behaviour matches `fail` mode and a single WARN explains the fallback
 
+### Request Body Schema Drift
+
+**Given** an OpenAPI spec declaring `POST /orders` with `requestBody` requiring
+a JSON object with a required `customerId` field of type `string`
+**When** a contract submits `POST /orders` with body `{"customer_id": 42}`
+**Then** the report contains a violation pointing at the missing required
+field `customerId` and the type mismatch on `customerId`/`customer_id`
+
+### Response Body Schema Drift
+
+**Given** an OpenAPI spec declaring `GET /orders/{id}` returning `200` with a
+schema requiring `id` and `total` (number)
+**When** a contract responds with `{"id": "abc"}` (missing `total`)
+**Then** the report contains a violation for the missing required field
+
+### Required Request Header Missing
+
+**Given** an OpenAPI spec declaring a required `X-Tenant-Id` header on
+`GET /orders`
+**When** a contract for `GET /orders` does not declare `X-Tenant-Id`
+**Then** the report contains a violation naming the missing header
+
+### Required Response Header Missing
+
+**Given** an OpenAPI spec declaring `Location` as a required response header
+on `POST /orders` 201
+**When** a contract for `POST /orders` 201 omits `Location` from the response
+**Then** the report contains a violation naming the missing response header
+
+### Required Query Parameter Missing
+
+**Given** an OpenAPI spec declaring a required query parameter `since` on
+`GET /events`
+**When** a contract calls `GET /events` with no `since` parameter
+**Then** the report contains a violation naming the missing query parameter
+
+### Query Parameter Type Mismatch
+
+**Given** an OpenAPI spec declaring `limit` as integer on `GET /events`
+**When** a contract calls `GET /events?limit=banana`
+**Then** the report contains a violation indicating type mismatch
+
+### Path Parameter Type Mismatch
+
+**Given** an OpenAPI spec declaring `id` as integer on `GET /orders/{id}`
+**When** a contract calls `GET /orders/abc` with a literal non-integer
+**Then** the report contains a violation indicating path parameter type
+mismatch
+
+### Content Type Drift
+
+**Given** an OpenAPI spec declaring `application/json` only for the request
+body of `POST /orders`
+**When** a contract sets `Content-Type: application/xml`
+**Then** the report contains a violation indicating an unsupported request
+content type
+
+### Server Value Used For DslProperty
+
+**Given** an OpenAPI spec requiring an integer in the response body
+**When** a contract uses `value(producer(123), consumer("abc"))` for that field
+**Then** validation passes — the producer (server) value is what the stub
+serves, and it matches the schema
+
 ## Error Cases
 
 | Scenario | Behaviour |
@@ -138,7 +237,10 @@ logged) and no drift verification or `OpenApiContractDriftException` is raised
 
 ## Out of Scope
 
-- Schema-level drift (request/response body, headers, query params). Tracked
-  separately; this feature only wires the existing path/method/status verifier
-  into the conversion path.
 - Configuration via annotation — covered by feature 003 for the JUnit path.
+- Validation of SCC matcher DSLs (regex/predicate matchers) beyond what the
+  server value can express. A regex matcher on a body field passes whatever
+  string satisfies the regex; the schema check only looks at concrete server
+  values.
+- Mutual TLS, auth tokens, OAuth scopes — these are runtime concerns, not
+  contract drift.
