@@ -41,6 +41,13 @@ public final class OpenApiSafeParser {
 		throw new AssertionError("Utility class");
 	}
 
+	/**
+	 * Returns the {@link ParseOptions} used by every safe parse call — all
+	 * resolution-related flags are disabled to block remote {@code $ref} traversal at
+	 * parse time.
+	 * @return a fresh, mutable {@link ParseOptions} with the SSRF-mitigation flags set
+	 * @since 0.2.0
+	 */
 	public static ParseOptions safeOptions() {
 		ParseOptions options = new ParseOptions();
 		options.setResolve(false);
@@ -51,11 +58,27 @@ public final class OpenApiSafeParser {
 		return options;
 	}
 
+	/**
+	 * Parses an OpenAPI document from a filesystem path or URL with remote {@code $ref}
+	 * resolution disabled.
+	 * @param path the file path or URL the parser should read
+	 * @return a {@link Result} carrying the parsed model (possibly null) and any
+	 * parse-error messages produced by the parser
+	 * @since 0.2.0
+	 */
 	public static Result parsePath(String path) {
 		SwaggerParseResult result = new OpenAPIV3Parser().readLocation(path, null, safeOptions());
 		return adapt(result);
 	}
 
+	/**
+	 * Parses an OpenAPI document from an in-memory string with remote {@code $ref}
+	 * resolution disabled.
+	 * @param content the raw OpenAPI YAML or JSON content
+	 * @return a {@link Result} carrying the parsed model (possibly null) and any
+	 * parse-error messages produced by the parser
+	 * @since 0.2.0
+	 */
 	public static Result parseContents(String content) {
 		SwaggerParseResult result = new OpenAPIV3Parser().readContents(content, null, safeOptions());
 		return adapt(result);
@@ -69,6 +92,15 @@ public final class OpenApiSafeParser {
 		return new Result(result.getOpenAPI(), messages);
 	}
 
+	/**
+	 * The outcome of a safe parse — the (possibly null) {@link OpenAPI} model plus any
+	 * messages emitted by the parser. Callers should surface or log those messages rather
+	 * than dropping them silently.
+	 *
+	 * @param openAPI the parsed OpenAPI model, or {@code null} if parsing failed
+	 * @param messages diagnostic messages emitted by the parser; never {@code null}
+	 * @since 0.2.0
+	 */
 	public record Result(@Nullable OpenAPI openAPI, List<String> messages) {
 	}
 

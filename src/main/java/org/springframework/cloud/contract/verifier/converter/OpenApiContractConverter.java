@@ -32,6 +32,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.contract.spec.Contract;
 import org.springframework.cloud.contract.spec.ContractConverter;
 
+/**
+ * Spring Cloud Contract {@link ContractConverter} that turns OpenAPI 3.x YAML or JSON
+ * specifications into SCC contracts. After conversion, every produced contract is
+ * verified against the same source spec via {@link ConverterDriftCheck} — the drift
+ * detection feature documented in {@code docs/specs/006-converter-drift-detection.md}.
+ *
+ * @since 0.2.0
+ */
 public class OpenApiContractConverter implements ContractConverter<Collection<PathItem>> {
 
 	private static final Logger log = LoggerFactory.getLogger(OpenApiContractConverter.class);
@@ -42,6 +50,14 @@ public class OpenApiContractConverter implements ContractConverter<Collection<Pa
 
 	private final Oa3Parser oa3Parser = new Oa3Parser();
 
+	/**
+	 * Returns whether the given file looks like an OpenAPI specification this converter
+	 * can read.
+	 * @param file the candidate file
+	 * @return {@code true} if the file is YAML/JSON containing an OpenAPI document, and
+	 * the converter can produce at least one contract from it
+	 * @since 0.2.0
+	 */
 	@Override
 	public boolean isAccepted(File file) {
 		String name = file.getName().toLowerCase();
@@ -79,6 +95,16 @@ public class OpenApiContractConverter implements ContractConverter<Collection<Pa
 		return false;
 	}
 
+	/**
+	 * Reads the OpenAPI file, converts every operation into one or more SCC contracts,
+	 * and runs drift detection against the same parsed model.
+	 * @param file the OpenAPI specification file
+	 * @return the produced contracts; an empty collection if conversion fails (errors are
+	 * logged). On schema drift the
+	 * {@link org.springframework.cloud.contract.verifier.openapivalidation.OpenApiContractDriftException}
+	 * propagates per the configured drift mode.
+	 * @since 0.2.0
+	 */
 	@Override
 	public Collection<Contract> convertFrom(File file) {
 		OpenAPI openAPI;
@@ -101,6 +127,14 @@ public class OpenApiContractConverter implements ContractConverter<Collection<Pa
 		return contracts;
 	}
 
+	/**
+	 * Reverse conversion is not supported — this converter only reads OpenAPI and
+	 * produces contracts.
+	 * @param pathItems unused
+	 * @return never returns
+	 * @throws UnsupportedOperationException always
+	 * @since 0.2.0
+	 */
 	@Override
 	public Collection<PathItem> convertTo(Collection<Contract> pathItems) {
 		throw new UnsupportedOperationException("Cannot convert contracts into oa3");

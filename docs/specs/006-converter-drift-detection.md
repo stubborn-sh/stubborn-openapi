@@ -263,6 +263,13 @@ an SSRF proxy
 | Drift detected, mode=fail | `OpenApiContractDriftException` with full report |
 | Drift detected, mode=warn | WARN log, contracts returned |
 
+## Documentation contract
+
+Every public class, public method, and public constructor introduced or
+touched by this feature carries a Javadoc explaining intent, parameters,
+return value, and `@since`. This is part of the public-API surface
+contract — a public symbol without Javadoc is treated as a defect.
+
 ## Out of Scope
 
 - Configuration via annotation — covered by feature 003 for the JUnit path.

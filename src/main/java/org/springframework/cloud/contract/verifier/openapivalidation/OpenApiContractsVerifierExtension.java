@@ -33,12 +33,15 @@ public class OpenApiContractsVerifierExtension implements BeforeAllCallback {
 
 	private final OpenApiContractsVerifier verifier = new OpenApiContractsVerifier();
 
-	@Override
 	/**
-	 * Runs validation once before all tests in the class.
-	 *
+	 * Runs validation once before all tests in the class. Throws an
+	 * {@link AssertionError} containing the rendered violation report if any drift is
+	 * detected.
+	 * @param context the JUnit 5 extension context — used only to discover the
+	 * {@link VerifyContractsAgainstOpenApi} annotation
 	 * @since 5.0.2
 	 */
+	@Override
 	public void beforeAll(ExtensionContext context) {
 		VerificationConfiguration configuration = resolveConfiguration(context);
 		OpenApiVerificationReport report = verifier.verify(configuration.openApiSpec(), configuration.contractsDir());

@@ -26,16 +26,34 @@ public class OpenApiContractDriftException extends RuntimeException {
 
 	private final transient OpenApiVerificationReport report;
 
+	/**
+	 * Creates a new drift exception carrying the given verification report.
+	 * @param report the verification report listing every drift violation; its rendered
+	 * form becomes the exception message
+	 * @since 0.2.0
+	 */
 	public OpenApiContractDriftException(OpenApiVerificationReport report) {
 		super(report.render());
 		this.report = report;
 	}
 
+	/**
+	 * Creates a new drift exception with an underlying cause — used when the verifier
+	 * itself throws and we want to wrap that into a synthetic single-violation report.
+	 * @param report the synthetic report describing the failure
+	 * @param cause the underlying exception thrown by the verifier
+	 * @since 0.2.0
+	 */
 	public OpenApiContractDriftException(OpenApiVerificationReport report, Throwable cause) {
 		super(report.render(), cause);
 		this.report = report;
 	}
 
+	/**
+	 * Returns the verification report that triggered this exception.
+	 * @return the report containing every drift violation found
+	 * @since 0.2.0
+	 */
 	public OpenApiVerificationReport report() {
 		return this.report;
 	}
