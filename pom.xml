@@ -43,10 +43,10 @@
 		<java.version>25</java.version>
 
 		<!-- Spring Cloud Contract -->
-		<spring-cloud-contract.version>5.0.2</spring-cloud-contract.version>
+		<spring-cloud-contract.version>5.0.3</spring-cloud-contract.version>
 
 		<!-- Swagger / OpenAPI parser -->
-		<swagger-parser.version>2.1.39</swagger-parser.version>
+		<swagger-parser.version>2.1.44</swagger-parser.version>
 
 		<!-- Static analysis -->
 		<spring-javaformat.version>0.0.47</spring-javaformat.version>
@@ -58,7 +58,7 @@
 		<pmd-plugin.version>3.28.0</pmd-plugin.version>
 
 		<!-- Null safety -->
-		<nullaway.version>0.13.1</nullaway.version>
+		<nullaway.version>0.13.6</nullaway.version>
 		<jspecify.version>1.0.0</jspecify.version>
 
 		<!-- Testing -->
