@@ -25,7 +25,7 @@ The only required dependencies are:
 - `swagger-parser` v3 (for OpenAPI 3.x parsing)
 - `junit-jupiter-api` (for the JUnit 5 extension annotation)
 
-The Maven coordinates are `sh.stubborn:spring-cloud-contract-openapi-validator`,
+The Maven coordinates are `sh.stubborn:stubborn-openapi-validator`,
 establishing the Stubborn brand while making it clear this works with any SCC project.
 
 ## Consequences
