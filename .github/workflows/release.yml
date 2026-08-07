@@ -44,17 +44,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Tag and push
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Release ${{ inputs.version }}"
-          git tag "v${{ inputs.version }}"
-          git push && git push --tags
+        run: ./scripts/release/tag-and-push.sh "${{ inputs.version }}"
 
       - name: Back to SNAPSHOT
-        run: |
-          ./mvnw versions:set -DnewVersion=${{ inputs.next-snapshot }} -DgenerateBackupPoms=false -q
-          git add -A
-          git commit -m "Back to ${{ inputs.next-snapshot }}"
-          git push
+        run: ./scripts/release/back-to-snapshot.sh "${{ inputs.next-snapshot }}"
