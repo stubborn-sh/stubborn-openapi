@@ -58,7 +58,7 @@
 		<pmd-plugin.version>3.28.0</pmd-plugin.version>
 
 		<!-- Null safety -->
-		<nullaway.version>0.13.6</nullaway.version>
+		<nullaway.version>0.13.8</nullaway.version>
 		<jspecify.version>1.0.0</jspecify.version>
 
 		<!-- Testing -->
