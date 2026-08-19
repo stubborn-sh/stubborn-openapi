@@ -48,3 +48,8 @@ jobs:
 
       - name: Back to SNAPSHOT
         run: ./scripts/release/back-to-snapshot.sh "${{ inputs.next-snapshot }}"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release create "v${{ inputs.version }}" --title "v${{ inputs.version }}" --generate-notes --verify-tag
