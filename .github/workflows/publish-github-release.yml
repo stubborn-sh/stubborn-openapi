@@ -1,0 +1,32 @@
+name: Publish GitHub Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 0.2.0) — must be an existing git tag v<version>'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  github-release:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "v${{ inputs.version }}" >/dev/null 2>&1; then
+            echo "Release v${{ inputs.version }} already exists — nothing to do."
+          else
+            gh release create "v${{ inputs.version }}" \
+              --title "v${{ inputs.version }}" \
+              --generate-notes \
+              --verify-tag
+          fi
