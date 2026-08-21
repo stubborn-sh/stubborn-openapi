@@ -1,4 +1,4 @@
-import org.springframework.cloud.contract.spec.Contract
+import sh.stubborn.contract.spec.Contract
 
 Contract.make {
     name 'should_accept_post_bar_when_path_parameter_matches'

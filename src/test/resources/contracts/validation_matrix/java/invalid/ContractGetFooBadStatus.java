@@ -15,7 +15,7 @@
  */
 import java.util.function.Supplier;
 
-import org.springframework.cloud.contract.spec.Contract;
+import sh.stubborn.contract.spec.Contract;
 
 public class ContractGetFooBadStatus implements Supplier<Contract> {
 
