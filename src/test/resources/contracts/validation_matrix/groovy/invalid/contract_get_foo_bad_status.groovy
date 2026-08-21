@@ -1,4 +1,4 @@
-import org.springframework.cloud.contract.spec.Contract
+import sh.stubborn.contract.spec.Contract
 
 Contract.make {
     name 'should_reject_get_foo_when_status_missing_in_openapi'

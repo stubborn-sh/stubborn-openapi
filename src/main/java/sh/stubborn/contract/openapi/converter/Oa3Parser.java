@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.util.function.Supplier;
 
-import sh.stubborn.contract.spec.Contract;
+package sh.stubborn.contract.openapi.converter;
 
-public class ContractPostFoo implements Supplier<Contract> {
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.parser.OpenAPIV3Parser;
 
-    @Override
-    public Contract get() {
-        return Contract.make(contract -> {
-            contract.name("should_reject_post_foo_when_method_missing_in_openapi");
-            contract.request(request -> {
-                request.method("POST");
-                request.urlPath("/foo");
-            });
-            contract.response(response -> response.status(200));
-        });
-    }
+import java.io.File;
+
+class Oa3Parser {
+
+	OpenAPI parseOpenAPI(File file) {
+		var spec = new OpenAPIV3Parser().read(file.getPath());
+		if (spec == null || spec.getPaths().isEmpty()) {
+			throw new IllegalArgumentException("OpenAPI specification %s not found".formatted(file.getPath()));
+		}
+		return spec;
+	}
+
 }

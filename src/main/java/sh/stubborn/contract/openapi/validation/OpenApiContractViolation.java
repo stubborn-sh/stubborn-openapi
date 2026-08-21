@@ -13,21 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.util.function.Supplier;
 
-import sh.stubborn.contract.spec.Contract;
+package sh.stubborn.contract.openapi.validation;
 
-public class ContractPostFoo implements Supplier<Contract> {
+import java.nio.file.Path;
 
-    @Override
-    public Contract get() {
-        return Contract.make(contract -> {
-            contract.name("should_reject_post_foo_when_method_missing_in_openapi");
-            contract.request(request -> {
-                request.method("POST");
-                request.urlPath("/foo");
-            });
-            contract.response(response -> response.status(200));
-        });
-    }
+/**
+ * Represents a single OpenAPI contract validation violation.
+ *
+ * @since 5.0.2
+ */
+public record OpenApiContractViolation(
+		/**
+		 * Contract source path.
+		 *
+		 * @since 5.0.2
+		 */
+		Path sourcePath,
+		/**
+		 * Contract name.
+		 *
+		 * @since 5.0.2
+		 */
+		String contractName,
+		/**
+		 * Violation message.
+		 *
+		 * @since 5.0.2
+		 */
+		String message) {
 }

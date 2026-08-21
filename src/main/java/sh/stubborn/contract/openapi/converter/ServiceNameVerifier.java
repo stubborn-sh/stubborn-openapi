@@ -13,21 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.util.function.Supplier;
 
-import sh.stubborn.contract.spec.Contract;
+package sh.stubborn.contract.openapi.converter;
 
-public class ContractPostFoo implements Supplier<Contract> {
+import org.apache.commons.lang3.StringUtils;
 
-    @Override
-    public Contract get() {
-        return Contract.make(contract -> {
-            contract.name("should_reject_post_foo_when_method_missing_in_openapi");
-            contract.request(request -> {
-                request.method("POST");
-                request.urlPath("/foo");
-            });
-            contract.response(response -> response.status(200));
-        });
-    }
+import java.util.Arrays;
+
+class ServiceNameVerifier {
+
+	static final String SERVICE_NAME_KEY = "scc.enabled.service-names";
+
+	boolean checkServiceEnabled(String serviceName) {
+		if (StringUtils.isBlank(serviceName) || StringUtils.isBlank(System.getProperty(SERVICE_NAME_KEY))) {
+			return true;
+		}
+		return Arrays.stream(StringUtils.split(System.getProperty(SERVICE_NAME_KEY), ","))
+			.map(StringUtils::trim)
+			.toList()
+			.contains(serviceName);
+	}
+
 }
