@@ -42,8 +42,8 @@
 	<properties>
 		<java.version>25</java.version>
 
-		<!-- Spring Cloud Contract -->
-		<spring-cloud-contract.version>5.0.3</spring-cloud-contract.version>
+		<!-- Stubborn Contract -->
+		<stubborn-contract.version>0.1.0</stubborn-contract.version>
 
 		<!-- Swagger / OpenAPI parser -->
 		<swagger-parser.version>2.1.44</swagger-parser.version>
@@ -76,9 +76,9 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-contract-dependencies</artifactId>
-				<version>${spring-cloud-contract.version}</version>
+				<groupId>sh.stubborn</groupId>
+				<artifactId>stubborn-contract-dependencies</artifactId>
+				<version>${stubborn-contract.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -91,14 +91,24 @@
 	</dependencyManagement>
 
 	<dependencies>
-		<!-- Spring Cloud Contract -->
+		<!-- Stubborn Contract -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-verifier</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-verifier</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-spec-java</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-spec-java</artifactId>
+		</dependency>
+		<!--
+		  Brings the Groovy contract converter (stubborn-contract-spec-groovy) onto the
+		  classpath so .groovy contracts are discovered via the ContractConverter
+		  ServiceLoader SPI. Without it, only YAML/Java contracts are parsed and .groovy
+		  contract drift goes undetected.
+		-->
+		<dependency>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-converters</artifactId>
 		</dependency>
 
 		<!-- Swagger / OpenAPI parser -->
@@ -140,6 +150,31 @@
 
 	<build>
 		<plugins>
+			<!-- Enforcer — the SCC API must never come back -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>ban-scc-api</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<bannedDependencies>
+									<excludes>
+										<exclude>org.springframework.cloud:spring-cloud-contract*</exclude>
+									</excludes>
+									<searchTransitive>true</searchTransitive>
+								</bannedDependencies>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<!-- Spring Java Format — auto-apply + validate -->
 			<plugin>
 				<groupId>io.spring.javaformat</groupId>
