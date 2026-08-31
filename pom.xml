@@ -43,7 +43,7 @@
 		<java.version>25</java.version>
 
 		<!-- Stubborn Contract -->
-		<stubborn-contract.version>0.1.1</stubborn-contract.version>
+		<stubborn-contract.version>0.1.2</stubborn-contract.version>
 
 		<!-- Swagger / OpenAPI parser -->
 		<swagger-parser.version>2.1.47</swagger-parser.version>
